@@ -43,8 +43,19 @@
   align-items: center;
 }
 
+/* COLORS */
+
+.warning {
+  color: #e65d4f;
+}
+
+.success {
+  color: #1abc9c;
+}
+
 /* MISC */
 
 .nowrap {
   white-space: nowrap;
 }
+
