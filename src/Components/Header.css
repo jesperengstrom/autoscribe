@@ -1,0 +1,31 @@
+#page-header {
+  display: grid;
+  grid-template-columns: 200px 300px 1fr 100px;
+  background: rgb(227, 227, 227);
+}
+
+#pen-logo {
+  position: relative;
+    top: -5px;
+    left: 9px;
+    transform: rotate(-23deg);
+}
+
+/* hack courtesy of https://tympanus.net/codrops/2015/09/15/styling-customizing-file-inputs-smart-way/ */
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.button-red {
+  color: #e65d4f
+}
+
+.button-red:hover {
+  color:#e65d4f;
+}
