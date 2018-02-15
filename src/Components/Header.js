@@ -1,4 +1,5 @@
 import React from 'react';
+import ModalAudioUrl from './ModalAudioUrl';
 import '../css/pushy-buttons.css';
 import '../css/main.css';
 import './Header.css';
@@ -46,10 +47,7 @@ const Header = ({ audioLoadSuccess, audioError, audioFile, onLoadFile }) => {
           <i className="large file audio outline icon" />
           Choose file
         </label>
-        <button className="btn btn--sm btn--red mr-05 nowrap">
-          <i className="large cloud download icon" />
-          Audio Url
-        </button>
+        <ModalAudioUrl />
       </div>
       <div className="flex align-center">
         <p className={`nowrap ml-1 ${loadStatus()}`}>

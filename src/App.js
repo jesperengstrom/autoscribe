@@ -16,10 +16,10 @@ class App extends Component {
   };
 
   componentDidMount() {
-    // const savedAudioFile = JSON.parse(localStorage.getItem('blao'));
-    // if (savedAudioFile) {
-    //   this.onLoadFile(savedAudioFile);
-    // }
+    const savedAudioFile = JSON.parse(localStorage.getItem('file'));
+    if (savedAudioFile) {
+      this.onLoadFile(savedAudioFile);
+    }
   }
 
   onLoadFile = obj =>
@@ -32,13 +32,11 @@ class App extends Component {
     this.setState({ audioLoadSuccess: true });
     localStorage.setItem('file', JSON.stringify(this.state.audioFile));
   };
-  onLoadError = e => {
-    // don't display error on no file loaded
-    if (e.target.error.message !== 'MEDIA_ELEMENT_ERROR: Empty src attribute') {
-      this.setState({
-        audioError: 'Error loading the audio. See docs for help.',
-      });
-    }
+  onLoadError = error => {
+    this.setState({
+      audioError: error,
+      audioLoadSuccess: false,
+    });
   };
 
   render() {
