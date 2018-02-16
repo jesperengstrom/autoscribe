@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactAudioPlayer from 'react-audio-player';
 import Audiocontrol from './Audiocontrol';
 import Transcribe from './Transcribe';
 import '../css/main.css';
@@ -10,8 +11,8 @@ class Main extends Component {
     isPlaying: false,
   };
   onPlaybackChange = isPlaying => {
-    if (isPlaying) this.audio.play();
-    else this.audio.pause();
+    if (isPlaying) this.rap.audioEl.play();
+    else this.rap.audioEl.pause();
     this.setState({ isPlaying: isPlaying === true });
   };
   handleError = e => {
@@ -42,7 +43,7 @@ class Main extends Component {
   render() {
     return (
       <main id="main-container">
-        <audio
+        {/* <audio
           src={this.props.audioFile.path}
           onCanPlay={this.props.onLoadSuccess}
           onError={this.handleError}
@@ -52,7 +53,16 @@ class Main extends Component {
         >
           <track kind="captions" />
           Your browser does not support HTML Audio
-        </audio>
+        </audio> */}
+        <ReactAudioPlayer
+          src={this.props.audioFile.path}
+          onCanPlay={this.props.onLoadSuccess}
+          onError={this.handleError}
+          // need to add a ref to access the play() and pause() functions on the element
+          ref={element => {
+            this.rap = element;
+          }}
+        />
         <Audiocontrol
           audioLoadSuccess={this.props.audioLoadSuccess}
           isListening={this.state.isListening}

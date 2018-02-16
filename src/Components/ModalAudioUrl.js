@@ -12,9 +12,11 @@ class ModalAudioUrl extends Component {
   handleClose = () => this.setState({ modalOpen: false });
   handleChange = e => this.setState({ url: e.target.value });
   handleSubmit = e => {
-    e.preventDefault();
-    const fileObj = { filename: this.state.url, path: this.state.url };
-    this.props.onSelectFile(fileObj);
+    if (this.state.url) {
+      e.preventDefault();
+      const fileObj = { filename: this.state.url, path: this.state.url };
+      this.props.onSelectFile(fileObj);
+    }
     this.handleClose();
   };
 
