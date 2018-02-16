@@ -1,48 +1,42 @@
 import React from 'react';
+import { PlaybackControls, ProgressBar } from 'react-player-controls';
 import './Audiocontrol.css';
+import '../css/react-player-controls.css';
 
-const Audiocontrol = ({ audio, onLoadSuccess, onLoadError }) => {
-  const audioError = e => {
-    // don't display error when no file loaded
-    if (audio.filename === 'No audiofile loaded') {
-      return onLoadError(false);
-    }
-    let error;
-
-    switch (e.target.error.code) {
-      case 2:
-        error = 'A network error prevents audio from playing. Try reloading it';
-        break;
-      case 3:
-        error =
-          'There was a problem decoding the audio. Please inspect the file';
-        break;
-      case 4:
-        error =
-          "Can't read audio source. Try relocating it or see docs for help.";
-        break;
-      default:
-        error = true;
-        break;
-    }
-    return onLoadError(error);
-  };
-
-  return (
-    <section id="audiocontrol-section">
-      <audio
-        id="audio-player"
-        src={audio.path}
-        onCanPlay={onLoadSuccess}
-        onError={audioError}
-        controls
-        controlsList="nodownload"
-      >
-        <track kind="captions" />
-        Your browser does not support HTML Audio
-      </audio>
-    </section>
-  );
-};
+const Audiocontrol = ({
+  audioLoadSuccess,
+  isListening,
+  isPlaying,
+  onPlaybackChange,
+  duration = 0,
+}) => (
+  <section
+    id="audiocontrol-section"
+    className="flex  justify-center align-center"
+  >
+    <div>
+      <PlaybackControls
+        isPlayable={audioLoadSuccess}
+        isPlaying={isPlaying}
+        showPrevious
+        hasPrevious={false}
+        showNext
+        hasNext={false}
+        onPlaybackChange={onPlaybackChange}
+        onPrevious={() => alert('Go to previous')}
+        onNext={() => alert('Go to next')}
+      />
+      <ProgressBar
+        totalTime={duration}
+        currentTime={0}
+        isSeekable
+        // onSeek={time => this.setState(() => ({ currentTime: time }))}
+        // onSeekStart={time => this.setState(() => ({ lastSeekStart: time }))}
+        // onSeekEnd={time => this.setState(() => ({ lastSeekEnd: time }))}
+        // onIntent={time => this.setState(() => ({ lastIntent: time }))}
+      />
+    </div>
+  </section>
+);
 
 export default Audiocontrol;

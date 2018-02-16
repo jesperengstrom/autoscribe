@@ -47,7 +47,8 @@ class App extends Component {
       <div id="app-container">
         <Header {...this.state} onSelectFile={this.onSelectFile} />
         <Main
-          audio={this.state.audioFile}
+          audioFile={this.state.audioFile}
+          audioLoadSuccess={this.state.audioLoadSuccess}
           onLoadSuccess={this.onLoadSuccess}
           onLoadError={this.onLoadError}
         />
