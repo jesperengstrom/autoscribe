@@ -56,7 +56,7 @@ const Header = ({ audioLoadSuccess, audioError, audioFile, onSelectFile }) => {
       <div className="flex align-center justify-end">
         <p>
           <a
-            href="http://www.github.com/jesperengstrom"
+            href="https://github.com/jesperengstrom/autoscribe/blob/master/Documentation.md"
             target="_blank"
             rel="noopener noreferrer"
           >
