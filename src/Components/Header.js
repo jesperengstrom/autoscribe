@@ -4,7 +4,7 @@ import '../css/pushy-buttons.css';
 import '../css/main.css';
 import './Header.css';
 
-const Header = ({ audioLoadSuccess, audioError, audioFile, onLoadFile }) => {
+const Header = ({ audioLoadSuccess, audioError, audioFile, onSelectFile }) => {
   const onChange = e => {
     // if file selected, then select again and abort
     if (!e.target.files[0]) {
@@ -13,11 +13,9 @@ const Header = ({ audioLoadSuccess, audioError, audioFile, onLoadFile }) => {
     const source = e.target.files[0];
     const sourceObj = {
       filename: source.name,
-      size: source.size,
-      type: source.type,
       path: URL.createObjectURL(e.target.files[0]),
     };
-    return onLoadFile(sourceObj);
+    return onSelectFile(sourceObj);
   };
 
   const loadStatus = () => {
@@ -47,7 +45,7 @@ const Header = ({ audioLoadSuccess, audioError, audioFile, onLoadFile }) => {
           <i className="large file audio outline icon" />
           Choose file
         </label>
-        <ModalAudioUrl />
+        <ModalAudioUrl onSelectFile={onSelectFile} />
       </div>
       <div className="flex align-center">
         <p className={`nowrap ml-1 ${loadStatus()}`}>

@@ -9,8 +9,7 @@ class App extends Component {
     audioError: false,
     audioFile: {
       filename: 'No audiofile loaded',
-      size: 0,
-      type: false,
+      duration: 0,
       path: '',
     },
   };
@@ -18,20 +17,24 @@ class App extends Component {
   componentDidMount() {
     const savedAudioFile = JSON.parse(localStorage.getItem('file'));
     if (savedAudioFile) {
-      this.onLoadFile(savedAudioFile);
+      this.onSelectFile(savedAudioFile);
     }
   }
 
-  onLoadFile = obj =>
+  onSelectFile = obj =>
     this.setState({
       audioFile: obj,
       audioLoadSuccess: false,
       audioError: false,
     });
-  onLoadSuccess = () => {
-    this.setState({ audioLoadSuccess: true });
+
+  onLoadSuccess = e => {
+    const audioObj = { ...this.state.audioFile };
+    audioObj.durtion = e.target.duration;
+    this.setState({ audioLoadSuccess: true, audioFile: audioObj });
     localStorage.setItem('file', JSON.stringify(this.state.audioFile));
   };
+
   onLoadError = error => {
     this.setState({
       audioError: error,
@@ -42,7 +45,7 @@ class App extends Component {
   render() {
     return (
       <div id="app-container">
-        <Header {...this.state} onLoadFile={this.onLoadFile} />
+        <Header {...this.state} onSelectFile={this.onSelectFile} />
         <Main
           audio={this.state.audioFile}
           onLoadSuccess={this.onLoadSuccess}

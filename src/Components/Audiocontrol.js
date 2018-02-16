@@ -36,6 +36,7 @@ const Audiocontrol = ({ audio, onLoadSuccess, onLoadError }) => {
         onCanPlay={onLoadSuccess}
         onError={audioError}
         controls
+        controlsList="nodownload"
       >
         <track kind="captions" />
         Your browser does not support HTML Audio
