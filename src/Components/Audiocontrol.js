@@ -10,13 +10,10 @@ const Audiocontrol = ({
   onPlaybackChange,
   duration = 0,
   currentTime,
-  setCurrentTime,
+  handleSeek,
 }) => (
-  <section
-    id="audiocontrol-section"
-    className="flex  justify-center align-center"
-  >
-    <div>
+  <section id="audiocontrol-section" className="p-05">
+    <div className="flex justify-center align-center">
       <PlaybackControls
         isPlayable={audioLoadSuccess}
         isPlaying={isPlaying}
@@ -28,12 +25,13 @@ const Audiocontrol = ({
         onPrevious={() => alert('Go to previous')}
         onNext={() => alert('Go to next')}
       />
+    </div>
+    <div className="flex justify-center align-center">
       <ProgressBar
         totalTime={duration}
         currentTime={currentTime}
-        isSeekable
-        onSeek={setCurrentTime}
-        // onSeek={time => this.setState(() => ({ currentTime: time }))}
+        isSeekable={audioLoadSuccess}
+        onSeek={handleSeek}
         // onSeekStart={time => this.setState(() => ({ lastSeekStart: time }))}
         // onSeekEnd={time => this.setState(() => ({ lastSeekEnd: time }))}
         // onIntent={time => this.setState(() => ({ lastIntent: time }))}

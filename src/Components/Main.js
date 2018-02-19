@@ -12,12 +12,28 @@ class Main extends Component {
     currentTime: 0,
   };
   onPlaybackChange = isPlaying => {
-    if (isPlaying) this.rap.audioEl.play();
-    else this.rap.audioEl.pause();
+    if (isPlaying) {
+      this.rap.audioEl.play();
+    } else {
+      this.rap.audioEl.pause();
+    }
     this.setState({ isPlaying: isPlaying === true });
   };
-  setCurrentTime = time => this.setState(() => ({ currentTime: time }));
 
+  /**
+   * returns audio.currentTime every 1 sec and sets state
+   */
+  handleAudioProgressListen = time =>
+    this.setState(() => ({ currentTime: time }));
+  /**
+   * handles seeking from progress bar
+   */
+  handleSeek = time => {
+    this.setState({ currentTime: time }, () => {
+      this.rap.audioEl.currentTime = time;
+    });
+  };
+  stopAudioProgress = () => {};
   handleError = e => {
     // don't display error when no file loaded
     if (this.props.audioFile.filename === 'No audiofile loaded') {
@@ -51,6 +67,7 @@ class Main extends Component {
           src={this.props.audioFile.path}
           onCanPlay={this.props.onLoadSuccess}
           onError={this.handleError}
+          // need to add a ref to access the play() and pause() functions on the element
           ref={audio => {
             this.audio = audio;
           }}
@@ -63,7 +80,7 @@ class Main extends Component {
           onCanPlay={this.props.onLoadSuccess}
           onError={this.handleError}
           listenInterval={1000}
-          onListen={this.setCurrentTime}
+          onListen={this.handleAudioProgressListen}
           // need to add a ref to access the play() and pause() functions on the element
           ref={element => {
             this.rap = element;
@@ -76,7 +93,7 @@ class Main extends Component {
           onPlaybackChange={this.onPlaybackChange}
           duration={this.props.audioFile.duration}
           currentTime={this.state.currentTime}
-          setCurrentTime={this.setCurrentTime}
+          handleSeek={this.handleSeek}
         />
         <Transcribe />
       </main>

@@ -17,6 +17,12 @@
 }
 
 /* PADDING */
+.p-05{
+  padding: 0.5rem;
+}
+.p-1 {
+  padding: 1rem;
+}
 .pl-1 {
   padding-left: 1rem;
 }
@@ -41,6 +47,11 @@
 
 .align-center {
   align-items: center;
+}
+
+/* WIDTH */
+.full-width {
+  width:100%;
 }
 
 /* COLORS */
