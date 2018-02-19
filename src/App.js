@@ -30,7 +30,7 @@ class App extends Component {
 
   onLoadSuccess = e => {
     const audioObj = { ...this.state.audioFile };
-    audioObj.durtion = e.target.duration;
+    audioObj.duration = e.target.duration;
     this.setState({ audioLoadSuccess: true, audioFile: audioObj });
     localStorage.setItem('file', JSON.stringify(this.state.audioFile));
   };

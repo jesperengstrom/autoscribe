@@ -9,12 +9,15 @@ class Main extends Component {
   state = {
     isListening: false,
     isPlaying: false,
+    currentTime: 0,
   };
   onPlaybackChange = isPlaying => {
     if (isPlaying) this.rap.audioEl.play();
     else this.rap.audioEl.pause();
     this.setState({ isPlaying: isPlaying === true });
   };
+  setCurrentTime = time => this.setState(() => ({ currentTime: time }));
+
   handleError = e => {
     // don't display error when no file loaded
     if (this.props.audioFile.filename === 'No audiofile loaded') {
@@ -40,6 +43,7 @@ class Main extends Component {
     }
     return this.props.onLoadError(error);
   };
+
   render() {
     return (
       <main id="main-container">
@@ -58,6 +62,8 @@ class Main extends Component {
           src={this.props.audioFile.path}
           onCanPlay={this.props.onLoadSuccess}
           onError={this.handleError}
+          listenInterval={1000}
+          onListen={this.setCurrentTime}
           // need to add a ref to access the play() and pause() functions on the element
           ref={element => {
             this.rap = element;
@@ -69,6 +75,8 @@ class Main extends Component {
           isPlaying={this.state.isPlaying}
           onPlaybackChange={this.onPlaybackChange}
           duration={this.props.audioFile.duration}
+          currentTime={this.state.currentTime}
+          setCurrentTime={this.setCurrentTime}
         />
         <Transcribe />
       </main>

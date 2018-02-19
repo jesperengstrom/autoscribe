@@ -9,6 +9,8 @@ const Audiocontrol = ({
   isPlaying,
   onPlaybackChange,
   duration = 0,
+  currentTime,
+  setCurrentTime,
 }) => (
   <section
     id="audiocontrol-section"
@@ -28,8 +30,9 @@ const Audiocontrol = ({
       />
       <ProgressBar
         totalTime={duration}
-        currentTime={0}
+        currentTime={currentTime}
         isSeekable
+        onSeek={setCurrentTime}
         // onSeek={time => this.setState(() => ({ currentTime: time }))}
         // onSeekStart={time => this.setState(() => ({ lastSeekStart: time }))}
         // onSeekEnd={time => this.setState(() => ({ lastSeekEnd: time }))}
@@ -38,5 +41,4 @@ const Audiocontrol = ({
     </div>
   </section>
 );
-
 export default Audiocontrol;
