@@ -10,6 +10,7 @@ class Main extends Component {
     isListening: false,
     isPlaying: false,
     currentTime: 0,
+    volume: 0.5,
   };
   onPlaybackChange = isPlaying => {
     if (isPlaying) {
@@ -33,7 +34,9 @@ class Main extends Component {
       this.rap.audioEl.currentTime = time;
     });
   };
-  stopAudioProgress = () => {};
+  handleVolumeChange = volume => {
+    this.setState({ volume });
+  };
   handleError = e => {
     // don't display error when no file loaded
     if (this.props.audioFile.filename === 'No audiofile loaded') {
@@ -63,24 +66,13 @@ class Main extends Component {
   render() {
     return (
       <main id="main-container">
-        {/* <audio
-          src={this.props.audioFile.path}
-          onCanPlay={this.props.onLoadSuccess}
-          onError={this.handleError}
-          // need to add a ref to access the play() and pause() functions on the element
-          ref={audio => {
-            this.audio = audio;
-          }}
-        >
-          <track kind="captions" />
-          Your browser does not support HTML Audio
-        </audio> */}
         <ReactAudioPlayer
           src={this.props.audioFile.path}
           onCanPlay={this.props.onLoadSuccess}
           onError={this.handleError}
           listenInterval={1000}
           onListen={this.handleAudioProgressListen}
+          volume={this.state.volume}
           // need to add a ref to access the play() and pause() functions on the element
           ref={element => {
             this.rap = element;
@@ -94,6 +86,8 @@ class Main extends Component {
           duration={this.props.audioFile.duration}
           currentTime={this.state.currentTime}
           handleSeek={this.handleSeek}
+          volume={this.state.volume}
+          handleVolumeChange={this.handleVolumeChange}
         />
         <Transcribe />
       </main>

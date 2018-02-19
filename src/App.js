@@ -21,12 +21,13 @@ class App extends Component {
     }
   }
 
-  onSelectFile = obj =>
+  onSelectFile = obj => {
     this.setState({
       audioFile: obj,
       audioLoadSuccess: false,
       audioError: false,
     });
+  };
 
   onLoadSuccess = e => {
     const audioObj = { ...this.state.audioFile };

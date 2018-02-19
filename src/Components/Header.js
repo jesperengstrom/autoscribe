@@ -6,7 +6,7 @@ import './Header.css';
 
 const Header = ({ audioLoadSuccess, audioError, audioFile, onSelectFile }) => {
   const onChange = e => {
-    // if file selected, then select again and abort
+    // in case a file is selected, reslected and aborted
     if (!e.target.files[0]) {
       return false;
     }
@@ -14,6 +14,8 @@ const Header = ({ audioLoadSuccess, audioError, audioFile, onSelectFile }) => {
     const sourceObj = {
       filename: source.name,
       path: URL.createObjectURL(e.target.files[0]),
+      // set duration to 0 while evaluating file
+      duration: 0,
     };
     return onSelectFile(sourceObj);
   };
