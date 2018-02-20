@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
-import recognition from '../api/speechRec';
+import speechRec from '../api/SpeechRec';
 import Audiocontrol from './Audiocontrol';
 import Transcribe from './Transcribe';
 import '../css/main.css';
@@ -14,6 +14,9 @@ class Main extends Component {
     currentTime: 0,
     volume: 0.5,
   };
+  /**
+   * On play/pause click
+   */
   onPlaybackChange = isPlaying => {
     if (isPlaying) {
       this.rap.audioEl.play();
@@ -22,23 +25,39 @@ class Main extends Component {
     }
     this.setState({ isPlaying: isPlaying === true });
   };
-
+  /**
+   * On rec button click
+   */
   onRecordChange = () => {
-    // stop audio if playing
+    // stop audio while recording starts
     if (this.state.isPlaying) {
       this.onPlaybackChange(false);
     }
     if (!this.state.pendingRecording && !this.state.isRecording) {
-      this.setState({ pendingRecording: true }, () => recognition.start());
-      return setInterval(() => {
-        this.setState({ isRecording: !this.state.isRecording });
-      }, 500);
+      this.setState({ pendingRecording: true }, () =>
+        speechRec.startAndListen(this.onRecognitionChange),
+      );
     }
-    return false;
+    if (this.state.isRecording) {
+      speechRec.stop();
+    }
   };
-
-  onRecognitionStart = () => {
-    console.log('started!');
+  /**
+   * Speech recognition onstart event
+   */
+  onRecognitionChange = e => {
+    if (e.type === 'start') {
+      console.log('speech recognition started');
+      this.setState({ isRecording: true, pendingRecording: false });
+    }
+    if (e.type === 'end') {
+      console.log('speech recognition ended');
+      this.setState({ isRecording: false });
+      // stop audio when recording stops
+      if (this.state.isPlaying) {
+        this.onPlaybackChange(false);
+      }
+    }
   };
 
   /**

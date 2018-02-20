@@ -232,3 +232,8 @@
     fill: #e65d4f;
   }
   
+  /* some kind of effect while recording is pending */
+  .RecordButton.pending, 
+  .RecordButton.pending .Icon-shape {
+    transform: scale(0.75);
+  } 

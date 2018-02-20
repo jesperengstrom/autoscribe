@@ -1,10 +1,28 @@
-import onRecognitionStart from '../Components/Main';
+const speechRec = (() => {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = new SpeechRecognition();
+  const recognition = new SpeechRecognition();
+  recognition.interimResults = true;
 
-recognition.interimResults = true;
+  const startAndListen = callback => {
+    recognition.start();
+    recognition.onstart = callback;
+    recognition.onend = callback;
+  };
+
+  const stop = () => {
+    recognition.stop();
+  };
+
+  return {
+    startAndListen,
+    stop,
+  };
+})();
+
+export default speechRec;
+
 // recognition.continuous = true;
 // create one initial p
 // var timeStamps = []
@@ -44,8 +62,6 @@ recognition.interimResults = true;
 //   setTimeout(() => recognition.stop(), 200);
 // }
 
-recognition.onstart = () => {
-  onRecognitionStart();
-};
-
-export default recognition;
+// recognition.onstart = () => {
+//   onRecognitionStart();
+// };

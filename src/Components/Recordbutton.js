@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 
 class Recordbutton extends Component {
-  state = {
-    pendingRecording: false,
-    recording: false,
-  };
+  state = {};
   handleClick = () => {};
   render() {
     return (
