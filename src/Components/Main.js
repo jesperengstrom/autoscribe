@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
+import recognition from '../api/speechRec';
 import Audiocontrol from './Audiocontrol';
 import Transcribe from './Transcribe';
 import '../css/main.css';
@@ -7,7 +8,8 @@ import './Main.css';
 
 class Main extends Component {
   state = {
-    isListening: false,
+    isRecording: false,
+    pendingRecording: false,
     isPlaying: false,
     currentTime: 0,
     volume: 0.5,
@@ -19,6 +21,24 @@ class Main extends Component {
       this.rap.audioEl.pause();
     }
     this.setState({ isPlaying: isPlaying === true });
+  };
+
+  onRecordChange = () => {
+    // stop audio if playing
+    if (this.state.isPlaying) {
+      this.onPlaybackChange(false);
+    }
+    if (!this.state.pendingRecording && !this.state.isRecording) {
+      this.setState({ pendingRecording: true }, () => recognition.start());
+      return setInterval(() => {
+        this.setState({ isRecording: !this.state.isRecording });
+      }, 500);
+    }
+    return false;
+  };
+
+  onRecognitionStart = () => {
+    console.log('started!');
   };
 
   /**
@@ -80,7 +100,9 @@ class Main extends Component {
         />
         <Audiocontrol
           audioLoadSuccess={this.props.audioLoadSuccess}
-          isListening={this.state.isListening}
+          isRecording={this.state.isRecording}
+          pendingRecording={this.state.pendingRecording}
+          onRecordChange={this.onRecordChange}
           isPlaying={this.state.isPlaying}
           onPlaybackChange={this.onPlaybackChange}
           duration={this.props.audioFile.duration}

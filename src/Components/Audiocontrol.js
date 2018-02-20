@@ -7,6 +7,7 @@ import {
   VolumeSlider,
   ControlDirection,
 } from 'react-player-controls';
+import Recordbutton from './Recordbutton';
 import './Audiocontrol.css';
 import '../css/react-player-controls.css';
 
@@ -20,8 +21,17 @@ class Audiocontrol extends Component {
     return (
       <section id="audiocontrol-section" className="p-05 pl-1 pr-1">
         <div className="flex justify-center align-center">
+          <Recordbutton
+            audioLoadSuccess={!this.props.audioLoadSuccess}
+            isRecording={this.props.isRecording}
+            pendingRecording={this.props.pendingRecording}
+            onRecordChange={this.props.onRecordChange}
+          />
           <PlaybackControls
-            isPlayable={this.props.audioLoadSuccess}
+            // play button disabled during pending recording
+            isPlayable={
+              this.props.audioLoadSuccess && !this.props.pendingRecording
+            }
             isPlaying={this.props.isPlaying}
             showPrevious
             hasPrevious={false}
