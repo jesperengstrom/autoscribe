@@ -13,35 +13,9 @@ class Main extends Component {
     isPlaying: false,
     currentTime: 0,
     volume: 0.5,
+    speed: 1,
   };
-  /**
-   * On play/pause click
-   */
-  onPlaybackChange = isPlaying => {
-    if (isPlaying) {
-      this.rap.audioEl.play();
-    } else {
-      this.rap.audioEl.pause();
-    }
-    this.setState({ isPlaying: isPlaying === true });
-  };
-  /**
-   * On rec button click
-   */
-  onRecordChange = () => {
-    // stop audio while recording starts
-    if (this.state.isPlaying) {
-      this.onPlaybackChange(false);
-    }
-    if (!this.state.pendingRecording && !this.state.isRecording) {
-      this.setState({ pendingRecording: true }, () =>
-        speechRec.startAndListen(this.onRecognitionChange),
-      );
-    }
-    if (this.state.isRecording) {
-      speechRec.stop();
-    }
-  };
+
   /**
    * Speech recognition onstart event
    */
@@ -55,8 +29,41 @@ class Main extends Component {
       this.setState({ isRecording: false });
       // stop audio when recording stops
       if (this.state.isPlaying) {
-        this.onPlaybackChange(false);
+        this.handlePlaybackChange(false);
       }
+    }
+    if (e.type === 'error') {
+      console.log(`A speech recognition error occurred: ${e.error}`);
+    }
+  };
+
+  /**
+   * On play/pause click
+   */
+  handlePlaybackChange = isPlaying => {
+    if (isPlaying) {
+      this.rap.audioEl.play();
+    } else {
+      this.rap.audioEl.pause();
+    }
+    this.setState({ isPlaying: isPlaying === true });
+  };
+
+  /**
+   * On rec button click
+   */
+  handleRecordChange = () => {
+    // stop audio while recording starts
+    if (this.state.isPlaying) {
+      this.handlePlaybackChange(false);
+    }
+    if (!this.state.pendingRecording && !this.state.isRecording) {
+      this.setState({ pendingRecording: true }, () =>
+        speechRec.startAndListen(this.onRecognitionChange),
+      );
+    }
+    if (this.state.isRecording) {
+      speechRec.stop();
     }
   };
 
@@ -65,6 +72,7 @@ class Main extends Component {
    */
   handleAudioProgressListen = time =>
     this.setState(() => ({ currentTime: time }));
+
   /**
    * handles seeking from progress bar
    */
@@ -73,10 +81,23 @@ class Main extends Component {
       this.rap.audioEl.currentTime = time;
     });
   };
+
   handleVolumeChange = volume => {
     this.setState({ volume });
   };
-  handleError = e => {
+
+  /**
+   * on dropdown speed change
+   * @param {obj} event
+   * @param {obj} All props and proposed value
+   */
+  handleSpeedChange = (e, d) => {
+    const speed = d.value;
+    this.rap.audioEl.playbackRate = speed;
+    this.setState({ speed });
+  };
+
+  handleAudioError = e => {
     // don't display error when no file loaded
     if (this.props.audioFile.filename === 'No audiofile loaded') {
       return this.props.onLoadError(false);
@@ -108,10 +129,11 @@ class Main extends Component {
         <ReactAudioPlayer
           src={this.props.audioFile.path}
           onCanPlay={this.props.onLoadSuccess}
-          onError={this.handleError}
+          onError={this.handleAudioError}
           listenInterval={1000}
           onListen={this.handleAudioProgressListen}
           volume={this.state.volume}
+          // playbackRate={this.state.speed}
           // need to add a ref to access the play() and pause() functions on the element
           ref={element => {
             this.rap = element;
@@ -121,14 +143,16 @@ class Main extends Component {
           audioLoadSuccess={this.props.audioLoadSuccess}
           isRecording={this.state.isRecording}
           pendingRecording={this.state.pendingRecording}
-          onRecordChange={this.onRecordChange}
+          handleRecordChange={this.handleRecordChange}
           isPlaying={this.state.isPlaying}
-          onPlaybackChange={this.onPlaybackChange}
+          handlePlaybackChange={this.handlePlaybackChange}
           duration={this.props.audioFile.duration}
           currentTime={this.state.currentTime}
           handleSeek={this.handleSeek}
           volume={this.state.volume}
           handleVolumeChange={this.handleVolumeChange}
+          speed={this.state.speed}
+          handleSpeedChange={this.handleSpeedChange}
         />
         <Transcribe />
       </main>

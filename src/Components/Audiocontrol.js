@@ -7,6 +7,8 @@ import {
   VolumeSlider,
   ControlDirection,
 } from 'react-player-controls';
+import { Dropdown } from 'semantic-ui-react';
+import { speedOptions } from '../api/speedOptions';
 import Recordbutton from './Recordbutton';
 import './Audiocontrol.css';
 import '../css/react-player-controls.css';
@@ -25,7 +27,7 @@ class Audiocontrol extends Component {
             audioLoadSuccess={!this.props.audioLoadSuccess}
             isRecording={this.props.isRecording}
             pendingRecording={this.props.pendingRecording}
-            onRecordChange={this.props.onRecordChange}
+            handleRecordChange={this.props.handleRecordChange}
           />
           <PlaybackControls
             // play button disabled during pending recording
@@ -37,9 +39,19 @@ class Audiocontrol extends Component {
             hasPrevious={false}
             showNext
             hasNext={false}
-            onPlaybackChange={this.props.onPlaybackChange}
+            onPlaybackChange={this.props.handlePlaybackChange}
             onPrevious={() => alert('Go to previous')}
             onNext={() => alert('Go to next')}
+          />
+        </div>
+        <div className="flex justify-center align-center off-white">
+          <Dropdown
+            disabled={!this.props.audioLoadSuccess}
+            inline
+            options={speedOptions}
+            // defaultValue={speedOptions[2].value}
+            value={this.props.speed}
+            onChange={this.props.handleSpeedChange}
           />
         </div>
         <div className="flex justify-center align-center">

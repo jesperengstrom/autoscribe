@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 class Recordbutton extends Component {
   state = {};
-  handleClick = () => {};
   render() {
     return (
       <button
@@ -12,7 +11,7 @@ class Recordbutton extends Component {
         ${this.props.pendingRecording ? 'pending' : ''}
         ${this.props.isRecording ? 'recording' : ''}
         `}
-        onClick={this.props.onRecordChange}
+        onClick={this.props.handleRecordChange}
       >
         <svg className="Icon RecordIcon" viewBox="0 0 100 100">
           <circle className="Icon-shape" cx="50" cy="50" r="40" />

@@ -8,12 +8,24 @@
   margin-right: 0.5rem;
 }
 
+.mt-05 {
+  margin-top: 0.5rem;
+}
+
 .ml-1 {
   margin-left: 1rem;
 }
 
 .mr-1 {
   margin-right: 1rem;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
+
+.mb-1 {
+  margin-bottom: 1rem !important;
 }
 
 /* PADDING */
@@ -74,3 +86,8 @@
   white-space: nowrap;
 }
 
+/* UI tweaks  */
+
+.ui.inline.dropdown>.text {
+  font-weight: normal;
+}

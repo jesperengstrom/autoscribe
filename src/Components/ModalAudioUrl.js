@@ -45,6 +45,7 @@ class ModalAudioUrl extends Component {
         <Modal.Actions>
           <form onSubmit={this.handleSubmit} className="ui form">
             <input
+              className="mb-1"
               type="url"
               value={this.state.url}
               onChange={this.handleChange}

@@ -162,7 +162,7 @@
 
 .VolumeSlider.isVertical {
   width: 8px;
-  height: 60px;
+  height: 50px;
   transition: width 0.05s, height 0.3s; }
 
 .VolumeSlider.isVertical .VolumeSlider-value {

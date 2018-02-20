@@ -9,6 +9,7 @@ const speechRec = (() => {
     recognition.start();
     recognition.onstart = callback;
     recognition.onend = callback;
+    recognition.onerror = callback;
   };
 
   const stop = () => {
