@@ -25,7 +25,7 @@ class ModalAudioUrl extends Component {
       <Modal
         trigger={
           <button
-            className="btn btn--sm btn--red mr-05 nowrap"
+            className="btn btn--sm btn--slim btn--red mr-05 nowrap"
             onClick={this.handleOpen}
           >
             <i className="large cloud download icon" />

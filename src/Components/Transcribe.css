@@ -1,0 +1,19 @@
+#transcribe-section {
+  background: rgb(227, 227, 227);
+}
+
+#transcribe-container {
+  background: white;
+  width: 55%;
+  min-height: 100%;
+  padding-right: 6%;
+  padding-left: 6%;
+  padding-top: 6rem;
+
+}
+
+#transcribe-box {
+  width: 100%;
+  height: 100%;
+  border:1px solid rgb(218, 218, 218);
+}

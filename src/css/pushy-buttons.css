@@ -43,3 +43,7 @@
   .btn--sm {
     /* font-size: 0.75em;  */
   }
+
+  .btn--slim {
+    padding: .4em 1.5em .5em
+  }

@@ -43,7 +43,10 @@ const Header = ({ audioLoadSuccess, audioError, audioFile, onSelectFile }) => {
           accept="audio/*"
           onChange={onChange}
         />
-        <label htmlFor="file" className="btn btn--sm btn--red nowrap mr-05">
+        <label
+          htmlFor="file"
+          className="btn btn--sm btn--slim btn--red nowrap mr-05"
+        >
           <i className="large file audio outline icon" />
           Choose file
         </label>

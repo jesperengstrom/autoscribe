@@ -43,6 +43,14 @@
   padding-right: 1rem;
 }
 
+.pt-1 {
+  padding-top: 1rem;
+} 
+
+.pb-1 {
+ padding-bottom: 1rem;
+}
+
 /* FLEXBOX */
 
 .flex {
@@ -91,3 +99,4 @@
 .ui.inline.dropdown>.text {
   font-weight: normal;
 }
+
