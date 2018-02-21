@@ -8,7 +8,7 @@ import {
   ControlDirection,
 } from 'react-player-controls';
 import { Dropdown } from 'semantic-ui-react';
-import { speedOptions } from '../api/speedOptions';
+import { speedOptions, langOptions } from '../api/options';
 import Recordbutton from './Recordbutton';
 import './Audiocontrol.css';
 import '../css/react-player-controls.css';
@@ -44,15 +44,25 @@ class Audiocontrol extends Component {
             onNext={() => alert('Go to next')}
           />
         </div>
-        <div className="flex justify-center align-center off-white">
-          <Dropdown
-            disabled={!this.props.audioLoadSuccess}
-            inline
-            options={speedOptions}
-            // defaultValue={speedOptions[2].value}
-            value={this.props.speed}
-            onChange={this.props.handleSpeedChange}
-          />
+        <div className="flex flex-column justify-center justify-evenly align-center">
+          <div className="off-white">
+            <Dropdown
+              disabled={!this.props.audioLoadSuccess}
+              inline
+              options={langOptions}
+              value={this.props.lang}
+              onChange={this.props.handleLangChange}
+            />
+          </div>
+          <div className="off-white">
+            <Dropdown
+              disabled={!this.props.audioLoadSuccess}
+              inline
+              options={speedOptions}
+              value={this.props.speed}
+              onChange={this.props.handleSpeedChange}
+            />
+          </div>
         </div>
         <div className="flex justify-center align-center">
           <ProgressBar

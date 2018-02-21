@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
-import speechRec from '../api/SpeechRec';
+import speechRec from '../api/speechRec';
 import Audiocontrol from './Audiocontrol';
 import Transcribe from './Transcribe';
 import '../css/main.css';
@@ -14,6 +14,8 @@ class Main extends Component {
     currentTime: 0,
     volume: 0.5,
     speed: 1,
+    lang: 'sv',
+    transcript: '',
   };
 
   /**
@@ -34,6 +36,16 @@ class Main extends Component {
     }
     if (e.type === 'error') {
       console.log(`A speech recognition error occurred: ${e.error}`);
+    }
+  };
+
+  handleRecognitionResult = e => {
+    // console.log(`1: ${e.results[0][0].transcript}`);
+    if (e.results.length > 1) {
+      console.log(`2: ${e.results[1][0].transcript}`);
+    }
+    if (e.results[0].isFinal) {
+      console.log(`final: ${e.results[0][0].transcript}`);
     }
   };
 
@@ -59,7 +71,11 @@ class Main extends Component {
     }
     if (!this.state.pendingRecording && !this.state.isRecording) {
       this.setState({ pendingRecording: true }, () =>
-        speechRec.startAndListen(this.onRecognitionChange),
+        speechRec.startAndListen(
+          this.state.lang,
+          this.onRecognitionChange,
+          this.handleRecognitionResult,
+        ),
       );
     }
     if (this.state.isRecording) {
@@ -95,6 +111,11 @@ class Main extends Component {
     const speed = d.value;
     this.rap.audioEl.playbackRate = speed;
     this.setState({ speed });
+  };
+
+  handleLangChange = (e, d) => {
+    const lang = d.value;
+    this.setState({ lang });
   };
 
   handleAudioError = e => {
@@ -153,8 +174,10 @@ class Main extends Component {
           handleVolumeChange={this.handleVolumeChange}
           speed={this.state.speed}
           handleSpeedChange={this.handleSpeedChange}
+          lang={this.state.lang}
+          handleLangChange={this.handleLangChange}
         />
-        <Transcribe />
+        <Transcribe transcript={this.state.transcript} />
       </main>
     );
   }

@@ -57,12 +57,21 @@
   display: flex;
 }
 
+.flex-column {
+  flex-direction: column;
+}
+
 .justify-center {
   justify-content: center;
 }
 
 .justify-end {
   justify-content: flex-end;
+}
+
+/* only chrome! */
+.justify-evenly {
+  justify-content: space-evenly
 }
 
 .align-center {

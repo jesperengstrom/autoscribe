@@ -21,4 +21,13 @@ export const speedOptions = [
   },
 ];
 
-export default speedOptions;
+export const langOptions = [
+  {
+    text: 'En',
+    value: 'en',
+  },
+  {
+    text: 'Sv',
+    value: 'sv',
+  },
+];
