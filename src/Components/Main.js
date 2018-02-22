@@ -40,13 +40,12 @@ class Main extends Component {
   };
 
   handleRecognitionResult = e => {
-    // console.log(`1: ${e.results[0][0].transcript}`);
-    if (e.results.length > 1) {
-      console.log(`2: ${e.results[1][0].transcript}`);
-    }
-    if (e.results[0].isFinal) {
-      console.log(`final: ${e.results[0][0].transcript}`);
-    }
+    // results.push(`1: ${e.results[0][0].transcript}`);
+    // if (e.results.length > 1) {
+    //   console.log(`2: ${e.results[1][0].transcript}`);
+    // }
+    // if (e.results[0].isFinal) {
+    // }
   };
 
   /**
