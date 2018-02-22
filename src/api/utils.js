@@ -10,26 +10,21 @@ const utils = (() => {
 
   const addKeywords = (final, keywrds) => {
     let k = keywrds;
-    return final.map(e => {
-      const obj = { word: e };
-      if (e.length > 3) {
-        const match = k.find(
-          (el, i) =>
-            el.word.toLowerCase() === e.toLowerCase()
-              ? { time: el.time, i }
-              : false,
-        );
-        if (match) {
-          obj.time = match.time;
-          k = k.slice(match.i + 1);
-          console.log('match:', match);
+    return final.map(el => {
+      const obj = { word: el };
+      if (el.length > 3) {
+        const i = k.findIndex(e => e.word.toLowerCase() === el.toLowerCase());
+        if (i >= 0) {
+          obj.time = k[i].time;
+          // slice keyword arr so we don't find same word again
+          k = k.slice(i + 1);
         }
       }
       return obj;
     });
   };
 
-  const findKeywords = (res, time) => {
+  const findKeywords = (res, time, callback) => {
     const latestResult = res[0][0].transcript;
     let modifiedResult = '';
     const { isFinal } = res[0];
@@ -60,13 +55,14 @@ const utils = (() => {
 
     if (isFinal) {
       console.log(`result: ${res[0][0].transcript}`);
-      console.log(keywords);
-      const finalArr = res[0][0].transcript.split(' ');
-      const goofyArr = addKeywords(finalArr, keywords);
-      console.log('goofy arr: ', goofyArr);
+      // make arr of final string
+      const fArr = res[0][0].transcript.split(' ');
+      const finalArr = addKeywords(fArr, keywords);
       keywords = [];
       previousResult = '';
+      return callback(finalArr);
     }
+    return false;
   };
 
   return {

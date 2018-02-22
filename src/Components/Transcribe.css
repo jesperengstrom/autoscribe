@@ -16,4 +16,12 @@
   width: 100%;
   height: 100%;
   border:1px solid rgb(218, 218, 218);
+  font-family: "Times New Roman", Times, serif;
+  font-size: 18px;
+}
+
+.keyword {
+  background: rgba(106, 180, 106, 0.363);
+  padding-left: 1px;
+  margin-right: 1px;
 }

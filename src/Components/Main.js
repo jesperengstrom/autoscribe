@@ -16,7 +16,7 @@ class Main extends Component {
     volume: 0.5,
     speed: 1,
     lang: 'sv',
-    transcript: '',
+    transcriptArr: [],
   };
 
   /**
@@ -40,9 +40,17 @@ class Main extends Component {
     }
   };
 
-  handleRecognitionResult = e => {
+  onRecognitionResult = e => {
     // get ref instead of state since it's more exact
-    utils.findKeywords(e.results, this.rap.audioEl.currentTime);
+    utils.findKeywords(
+      e.results,
+      this.rap.audioEl.currentTime,
+      this.recognitionArrCallback,
+    );
+  };
+
+  recognitionArrCallback = arr => {
+    this.setState({ transcriptArr: arr });
   };
 
   /**
@@ -70,7 +78,7 @@ class Main extends Component {
         speechRec.startAndListen(
           this.state.lang,
           this.onRecognitionChange,
-          this.handleRecognitionResult,
+          this.onRecognitionResult,
         ),
       );
     }
@@ -85,9 +93,6 @@ class Main extends Component {
   handleAudioProgressListen = time =>
     this.setState(() => ({ currentTime: time }));
 
-  /**
-   * handles seeking from progress bar
-   */
   handleSeek = time => {
     this.setState({ currentTime: time }, () => {
       this.rap.audioEl.currentTime = time;
@@ -173,7 +178,11 @@ class Main extends Component {
           lang={this.state.lang}
           handleLangChange={this.handleLangChange}
         />
-        <Transcribe transcript={this.state.transcript} />
+        <Transcribe
+          transcriptArr={this.state.transcriptArr}
+          isRecording={this.state.isRecording}
+          isPlaying={this.state.isPlaying}
+        />
       </main>
     );
   }
