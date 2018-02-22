@@ -2,38 +2,68 @@ const utils = (() => {
   let keywords = [];
   let previousResult = '';
 
-  const makeKeywordArray = string =>
-    string.split(' ').filter(el => el.length > 3);
+  const makeKeywordArray = (string, time) =>
+    string
+      .split(' ')
+      .filter(el => el.length > 3)
+      .map(el => ({ word: el, time }));
 
-  const findKeywords = e => {
-    const latestResult = e.results[0][0].transcript;
-    const { isFinal } = e.results[0];
-    if (previousResult) {
-      if (latestResult.toLowerCase().startsWith(previousResult.toLowerCase())) {
-        // extract the part of lastest result not present i previous
-        const surplus = latestResult.slice(previousResult.length).trim();
-        if (surplus) {
-          console.log(surplus);
-          keywords.push(...makeKeywordArray(surplus));
-          // duplicate
-        } else return;
-      } else if (!isFinal) {
-        // no match - push anyway if NOT same as last keyword
-        const tempArr = makeKeywordArray(latestResult);
-        if (tempArr[0] !== keywords[keywords.length - 1]) {
-          keywords.push(...tempArr);
+  const addKeywords = (final, keywrds) => {
+    let k = keywrds;
+    return final.map(e => {
+      const obj = { word: e };
+      if (e.length > 3) {
+        const match = k.find(
+          (el, i) =>
+            el.word.toLowerCase() === e.toLowerCase()
+              ? { time: el.time, i }
+              : false,
+        );
+        if (match) {
+          obj.time = match.time;
+          k = k.slice(match.i + 1);
+          console.log('match:', match);
         }
       }
-    } else {
+      return obj;
+    });
+  };
+
+  const findKeywords = (res, time) => {
+    const latestResult = res[0][0].transcript;
+    let modifiedResult = '';
+    const { isFinal } = res[0];
+
+    if (previousResult) {
+      // get the part of latest result not present i previous
+      if (latestResult.toLowerCase().startsWith(previousResult.toLowerCase())) {
+        modifiedResult = latestResult.slice(previousResult.length).trim();
+        // no match - unique
+      } else if (!isFinal) {
+        modifiedResult = latestResult;
+      }
       // first result
-      keywords.push(...makeKeywordArray(latestResult));
+    } else {
+      modifiedResult = latestResult;
+    }
+
+    // filter out empty results
+    if (modifiedResult) {
+      const tempArr = makeKeywordArray(modifiedResult, time);
+      // filter out adjacent identical words
+      if (tempArr[0] !== keywords[keywords.length - 1]) {
+        keywords.push(...tempArr);
+      }
     }
 
     previousResult = latestResult;
 
     if (isFinal) {
-      console.log(`result: ${e.results[0][0].transcript}`);
+      console.log(`result: ${res[0][0].transcript}`);
       console.log(keywords);
+      const finalArr = res[0][0].transcript.split(' ');
+      const goofyArr = addKeywords(finalArr, keywords);
+      console.log('goofy arr: ', goofyArr);
       keywords = [];
       previousResult = '';
     }

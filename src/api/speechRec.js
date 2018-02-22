@@ -1,5 +1,3 @@
-import utils from './utils';
-
 const speechRec = (() => {
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -9,13 +7,13 @@ const speechRec = (() => {
   recognition.maxAlternatives = 2;
   recognition.continuous = false;
 
-  const startAndListen = (lang, callback, recResult) => {
+  const startAndListen = (lang, callback, handleResult) => {
     recognition.lang = lang;
     recognition.start();
     recognition.onstart = callback;
     recognition.onend = callback;
     recognition.onerror = callback;
-    recognition.onresult = utils.findKeywords;
+    recognition.onresult = handleResult;
   };
 
   const stop = () => {

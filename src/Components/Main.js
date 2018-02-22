@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import speechRec from '../api/speechRec';
+import utils from '../api/utils';
 import Audiocontrol from './Audiocontrol';
 import Transcribe from './Transcribe';
 import '../css/main.css';
@@ -40,12 +41,8 @@ class Main extends Component {
   };
 
   handleRecognitionResult = e => {
-    // results.push(`1: ${e.results[0][0].transcript}`);
-    // if (e.results.length > 1) {
-    //   console.log(`2: ${e.results[1][0].transcript}`);
-    // }
-    // if (e.results[0].isFinal) {
-    // }
+    // get ref instead of state since it's more exact
+    utils.findKeywords(e.results, this.rap.audioEl.currentTime);
   };
 
   /**
