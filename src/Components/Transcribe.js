@@ -9,10 +9,14 @@ class Transcribe extends Component {
     if (this.props.transcriptArr.length > 0) {
       const span = this.props.transcriptArr.map((el, i) => {
         if (el.time) {
+          const offsetTime = el.time + this.props.offset;
           return (
-            <span key={el.time}>
-              <span className="span-keyword" data-time={el.time}>
-                <WordPlay time={el.time} onClick={this.props.handleWordClick} />
+            <span key={offsetTime}>
+              <span className="span-keyword" data-time={offsetTime}>
+                <WordPlay
+                  time={offsetTime}
+                  onClick={this.props.handleWordClick}
+                />
                 {el.word}
               </span>
               {` `}

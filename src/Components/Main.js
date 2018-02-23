@@ -17,6 +17,7 @@ class Main extends Component {
     speed: 1,
     lang: 'sv',
     transcriptArr: [],
+    offset: -1.6,
   };
 
   /**
@@ -125,6 +126,10 @@ class Main extends Component {
     this.setState({ lang });
   };
 
+  handleOffset = e => {
+    this.setState({ offset: parseFloat(e.target.value) });
+  };
+
   handleAudioError = e => {
     // don't display error when no file loaded
     if (this.props.audioFile.filename === 'No audiofile loaded') {
@@ -183,12 +188,15 @@ class Main extends Component {
           handleSpeedChange={this.handleSpeedChange}
           lang={this.state.lang}
           handleLangChange={this.handleLangChange}
+          offset={this.state.offset}
+          handleOffset={this.handleOffset}
         />
         <Transcribe
           transcriptArr={this.state.transcriptArr}
           isRecording={this.state.isRecording}
           isPlaying={this.state.isPlaying}
           handleWordClick={this.handleWordClick}
+          offset={this.state.offset}
         />
       </main>
     );
