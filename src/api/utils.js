@@ -25,21 +25,24 @@ const utils = (() => {
   };
 
   const findKeywords = (res, time, callback) => {
+    const { isFinal } = res[0];
     const latestResult = res[0][0].transcript;
     let modifiedResult = '';
-    const { isFinal } = res[0];
 
     if (previousResult) {
       // get the part of latest result not present i previous
       if (latestResult.toLowerCase().startsWith(previousResult.toLowerCase())) {
         modifiedResult = latestResult.slice(previousResult.length).trim();
+        previousResult = latestResult;
         // no match - unique
       } else if (!isFinal) {
         modifiedResult = latestResult;
+        previousResult = latestResult;
       }
       // first result
     } else {
       modifiedResult = latestResult;
+      previousResult = latestResult;
     }
 
     // filter out empty results
@@ -50,8 +53,6 @@ const utils = (() => {
         keywords.push(...tempArr);
       }
     }
-
-    previousResult = latestResult;
 
     if (isFinal) {
       console.log(`result: ${res[0][0].transcript}`);

@@ -4,7 +4,7 @@ const speechRec = (() => {
 
   const recognition = new SpeechRecognition();
   recognition.interimResults = true;
-  recognition.maxAlternatives = 2;
+  recognition.maxAlternatives = 1;
   recognition.continuous = false;
 
   const startAndListen = (lang, callback, handleResult) => {
