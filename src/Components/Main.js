@@ -103,6 +103,12 @@ class Main extends Component {
     this.setState({ volume });
   };
 
+  handleWordClick = e => {
+    const time = parseFloat(e.target.getAttribute('data-time'));
+    this.handleSeek(time);
+    this.handlePlaybackChange(true);
+  };
+
   /**
    * on dropdown speed change
    * @param {obj} event
@@ -182,6 +188,7 @@ class Main extends Component {
           transcriptArr={this.state.transcriptArr}
           isRecording={this.state.isRecording}
           isPlaying={this.state.isPlaying}
+          handleWordClick={this.handleWordClick}
         />
       </main>
     );

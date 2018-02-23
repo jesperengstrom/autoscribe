@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import WordPlay from './WordPlay';
 import './Transcribe.css';
 
 class Transcribe extends Component {
@@ -9,12 +10,18 @@ class Transcribe extends Component {
       const span = this.props.transcriptArr.map((el, i) => {
         if (el.time) {
           return (
-            <span key={`key${i}`} className="keyword" data-time={el.time}>
-              {`${el.word} `}
+            <span key={el.time}>
+              <span className="span-keyword" data-time={el.time}>
+                <WordPlay time={el.time} onClick={this.props.handleWordClick} />
+                {el.word}
+              </span>
+              {` `}
             </span>
           );
         }
-        return <span key={`key${i}`}>{`${el.word} `}</span>;
+        return (
+          <span key={el.word + i} className="span-word">{`${el.word} `}</span>
+        );
       });
       return <p>{span}.</p>;
     }
@@ -28,11 +35,15 @@ class Transcribe extends Component {
         className="flex justify-center align-center pt-1 "
       >
         <div id="transcribe-container">
-          <article id="transcribe-box" contentEditable>
+          <article
+            id="transcribe-box"
+            contentEditable
+            suppressContentEditableWarning
+          >
+            {this.renderTranscriptArr()}
             {this.props.isRecording && this.props.isPlaying
               ? 'Listening, please wait...'
               : ''}
-            {this.renderTranscriptArr()}
           </article>
         </div>
       </section>

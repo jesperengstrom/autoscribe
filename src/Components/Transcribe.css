@@ -20,8 +20,15 @@
   font-size: 18px;
 }
 
-.keyword {
-  background: rgba(106, 180, 106, 0.363);
-  padding-left: 1px;
-  margin-right: 1px;
+.span-keyword {
+  background: rgba(106, 180, 106, 0.18);
+  /* padding-left: 1px;
+  margin-right: 1px; */
+  white-space: nowrap;
+}
+
+.wordPlay .icon {
+  color: #50825a;
+  margin: 0;
+  cursor: pointer;
 }
