@@ -1,16 +1,19 @@
 import React from 'react';
 
 const WordPlay = props => (
-  <button
+  <span
+    role="button"
+    tabIndex={0}
     contentEditable="false"
     suppressContentEditableWarning
     className="wordPlay"
     data-time={props.time}
     onClick={props.onClick}
+    onKeyPress={props.onClick}
   >
     {/* <i aria-hidden="true" className="play small icon" /> */}
-    play
-  </button>
+    ▶️
+  </span>
 );
 
 export default WordPlay;

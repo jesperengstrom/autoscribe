@@ -17,7 +17,7 @@ class Main extends Component {
     speed: 1,
     lang: 'sv',
     transcriptArr: [],
-    offset: -1.6,
+    offset: -1.5,
   };
 
   /**

@@ -5,14 +5,20 @@ const utils = (() => {
   const makeKeywordArray = (string, time) =>
     string
       .split(' ')
-      .filter(el => el.length > 3)
-      .map(el => ({ word: el, time }));
+      // filter out large words
+      .filter(el => el.length > 5)
+      .map(el => ({ word: el, time }))
+      // filter duplicate words & times present in keywords
+      .filter(el => keywords.every(e => e.word !== el.word))
+      .filter(el =>
+        keywords.every(e => Math.round(e.time) !== Math.round(el.time)),
+      );
 
   const addKeywords = (final, keywrds) => {
     let k = keywrds;
     return final.map(el => {
       const obj = { word: el };
-      if (el.length > 3) {
+      if (el.length > 5) {
         const i = k.findIndex(e => e.word.toLowerCase() === el.toLowerCase());
         if (i >= 0) {
           obj.time = k[i].time;
@@ -47,11 +53,10 @@ const utils = (() => {
 
     // filter out empty results
     if (modifiedResult) {
-      const tempArr = makeKeywordArray(modifiedResult, time);
-      // filter out adjacent identical words
-      if (tempArr[0] !== keywords[keywords.length - 1]) {
-        keywords.push(...tempArr);
-      }
+      let newKeywords = makeKeywordArray(modifiedResult, time);
+      // console.log(newKeywords);
+      newKeywords = newKeywords.length > 1 ? newKeywords[0] : newKeywords;
+      keywords.push(...newKeywords);
     }
 
     if (isFinal) {

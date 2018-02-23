@@ -27,8 +27,7 @@
   white-space: nowrap;
 }
 
-.wordPlay .icon {
-  color: #50825a;
-  margin: 0;
+.wordPlay {
   cursor: pointer;
+  opacity: 0.5;
 }
