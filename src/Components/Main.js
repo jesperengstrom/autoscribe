@@ -16,7 +16,7 @@ class Main extends Component {
     volume: 0.5,
     speed: 1,
     lang: 'sv',
-    transcriptArr: [],
+    transcript: {},
     offset: -1.5,
   };
 
@@ -50,8 +50,8 @@ class Main extends Component {
     );
   };
 
-  recognitionArrCallback = arr => {
-    this.setState({ transcriptArr: arr });
+  recognitionArrCallback = obj => {
+    this.setState({ transcript: obj });
   };
 
   /**
@@ -105,7 +105,7 @@ class Main extends Component {
   };
 
   handleWordClick = e => {
-    const time = parseFloat(e.target.getAttribute('data-time'));
+    const time = parseFloat(e.target.getAttribute('data-start'));
     this.handleSeek(time);
     this.handlePlaybackChange(true);
   };
@@ -192,7 +192,7 @@ class Main extends Component {
           handleOffset={this.handleOffset}
         />
         <Transcribe
-          transcriptArr={this.state.transcriptArr}
+          transcript={this.state.transcript}
           isRecording={this.state.isRecording}
           isPlaying={this.state.isPlaying}
           handleWordClick={this.handleWordClick}

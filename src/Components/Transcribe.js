@@ -1,33 +1,49 @@
 import React, { Component } from 'react';
-import WordPlay from './WordPlay';
+import SentencePlay from './SentencePlay';
 import './Transcribe.css';
 
 class Transcribe extends Component {
   state = {};
 
   renderTranscriptArr = () => {
-    if (this.props.transcriptArr.length > 0) {
-      const span = this.props.transcriptArr.map((el, i) => {
+    const trans = this.props.transcript;
+    if (trans.transcript) {
+      const span = trans.transcript.map((el, i) => {
+        const dot = i === trans.transcript.length - 1 ? '.' : '';
         if (el.time) {
           const offsetTime = el.time + this.props.offset;
           return (
             <span key={offsetTime}>
-              <span className="span-keyword" data-time={offsetTime}>
-                <WordPlay
-                  time={offsetTime}
-                  onClick={this.props.handleWordClick}
-                />
-                {el.word}
+              <span
+                className="span-keyword"
+                data-start={offsetTime}
+                onClick={this.props.handleWordClick}
+                role="button"
+                onKeyPress={this.props.handleWordClick}
+                tabIndex={0}
+              >
+                {el.word + dot}
               </span>
               {` `}
             </span>
           );
         }
         return (
-          <span key={el.word + i} className="span-word">{`${el.word} `}</span>
+          <span key={el.word + i} className="span-word">
+            {`${el.word + dot} `}
+          </span>
         );
       });
-      return <p>{span}.</p>;
+      return (
+        <p>
+          <SentencePlay
+            start={trans.start + this.props.offset}
+            end={trans.end + this.props.offset}
+            onClick={this.props.handleWordClick}
+          />
+          {span}
+        </p>
+      );
     }
     return false;
   };

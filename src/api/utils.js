@@ -1,6 +1,15 @@
 const utils = (() => {
+  let startTime;
+  let endTime;
   let keywords = [];
   let previousResult = '';
+
+  const resetVals = () => {
+    keywords = [];
+    previousResult = '';
+    startTime = undefined;
+    endTime = undefined;
+  };
 
   const makeKeywordArray = (string, time) =>
     string
@@ -31,6 +40,7 @@ const utils = (() => {
   };
 
   const findKeywords = (res, time, callback) => {
+    if (!startTime) startTime = time;
     const { isFinal } = res[0];
     const latestResult = res[0][0].transcript;
     let modifiedResult = '';
@@ -60,13 +70,14 @@ const utils = (() => {
     }
 
     if (isFinal) {
+      endTime = time;
       console.log(`result: ${res[0][0].transcript}`);
       // make arr of final string
       const fArr = res[0][0].transcript.split(' ');
       const finalArr = addKeywords(fArr, keywords);
-      keywords = [];
-      previousResult = '';
-      return callback(finalArr);
+      const finalObj = { start: startTime, end: endTime, transcript: finalArr };
+      resetVals();
+      return callback(finalObj);
     }
     return false;
   };
