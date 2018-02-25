@@ -24,9 +24,12 @@
 
 .span-keyword {
   background: rgba(106, 180, 106, 0.18);
-  /* padding-left: 1px;
-  margin-right: 1px; */
   white-space: nowrap;
+  transition: background 0.5s ease;
+}
+
+.active {
+  background: rgba(106, 180, 106, 0.5);
 }
 
 .sentence-play {

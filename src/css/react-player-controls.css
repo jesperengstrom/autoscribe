@@ -236,4 +236,5 @@
   .RecordButton.pending, 
   .RecordButton.pending .Icon-shape {
     transform: scale(0.75);
+    transform-origin: center;
   } 

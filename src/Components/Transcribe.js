@@ -4,26 +4,51 @@ import './Transcribe.css';
 
 class Transcribe extends Component {
   state = {
-    keyWordTimes: {},
+    keywordTimes: false,
   };
 
   componentWillReceiveProps(newProps) {
+    // when new results come in -> log times
     if (
-      this.props.transcript.transcript &&
-      newProps.transcript !== this.props.transcript
-    )
+      !newProps.isPlaying &&
+      !newProps.isRecording &&
+      newProps.transcript.transcript
+    ) {
       this.logKeywordTimes();
+    }
+    // playing audio with keywords present... search for current
+    if (
+      newProps.isPlaying &&
+      !newProps.isRecording &&
+      this.state.keywordTimes
+    ) {
+      this.wordPlayingNow();
+    }
   }
 
+  wordPlayingNow = () => {
+    const newState = Object.assign({}, this.state.keywordTimes);
+    Object.keys(this.state.keywordTimes).forEach(el => {
+      // if one of keyword's time + offset is withing +1 sec from current audio time
+      if (el > this.props.currentTime && el < this.props.currentTime + 1) {
+        newState[el] = true;
+        console.log('match!', newState);
+        this.setState({ keywordTimes: newState });
+      }
+    });
+  };
+
   logKeywordTimes = () => {
-    console.log('logkeywordtimes called');
-    const keyWordTimes = {};
-    if (this.props.transcript.transcript) {
-      this.props.transcript.transcript.filter(el => el.time).forEach(el => {
-        keyWordTimes[el.time] = false;
-      });
-      console.log('keyword times:', keyWordTimes);
-      this.setState(keyWordTimes);
+    const newTimes = {};
+    this.props.transcript.transcript.filter(el => el.time).forEach(el => {
+      newTimes[el.time] = false;
+    });
+    // if new number of keywords differ from present, set new state
+    if (
+      Object.keys(newTimes).length !==
+      Object.keys(this.state.keywordTimes).length
+    ) {
+      this.setState({ keywordTimes: newTimes });
     }
   };
 
@@ -36,7 +61,9 @@ class Transcribe extends Component {
           return (
             <span key={el.time}>
               <span
-                className="span-keyword"
+                className={`span-keyword ${
+                  this.state.keywordTimes[el.time] ? 'active' : ''
+                }`}
                 data-start={el.time + this.props.offset}
                 data-end={trans.end + this.props.offset}
                 onClick={this.props.handleWordClick}
