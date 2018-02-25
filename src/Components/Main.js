@@ -18,6 +18,7 @@ class Main extends Component {
     lang: 'sv',
     transcript: {},
     offset: -1.5,
+    stopOn: false,
   };
 
   /**
@@ -104,10 +105,30 @@ class Main extends Component {
     this.setState({ volume });
   };
 
+  /**
+   * both 'play' icon and keywords
+   */
   handleWordClick = e => {
-    const time = parseFloat(e.target.getAttribute('data-start'));
-    this.handleSeek(time);
+    const start = parseFloat(e.target.getAttribute('data-start'));
+    const end = parseFloat(e.target.getAttribute('data-end'));
+    this.handleSeek(start);
     this.handlePlaybackChange(true);
+    // state check prevent from being more & more setIntervals
+    if (!this.state.stopOn) {
+      this.stopOn(end);
+    }
+  };
+
+  stopOn = val => {
+    this.setState({ stopOn: val });
+    const interval = setInterval(() => {
+      console.log('running interval!');
+      if (this.state.currentTime > val || !this.state.isPlaying) {
+        this.handlePlaybackChange(false);
+        clearInterval(interval);
+        this.setState({ stopOn: false });
+      }
+    }, 500);
   };
 
   /**
@@ -192,6 +213,7 @@ class Main extends Component {
           handleOffset={this.handleOffset}
         />
         <Transcribe
+          currentTime={this.state.currentTime}
           transcript={this.state.transcript}
           isRecording={this.state.isRecording}
           isPlaying={this.state.isPlaying}

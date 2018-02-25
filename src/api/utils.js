@@ -18,7 +18,8 @@ const utils = (() => {
       .filter(el => el.length > 5)
       .map(el => ({ word: el, time }))
       // filter duplicate words & times present in keywords
-      .filter(el => keywords.every(e => e.word !== el.word))
+      // below line causes mixes up duplicate words
+      // .filter(el => keywords.every(e => e.word !== el.word))
       .filter(el =>
         keywords.every(e => Math.round(e.time) !== Math.round(el.time)),
       );

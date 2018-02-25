@@ -3,7 +3,29 @@ import SentencePlay from './SentencePlay';
 import './Transcribe.css';
 
 class Transcribe extends Component {
-  state = {};
+  state = {
+    keyWordTimes: {},
+  };
+
+  componentWillReceiveProps(newProps) {
+    if (
+      this.props.transcript.transcript &&
+      newProps.transcript !== this.props.transcript
+    )
+      this.logKeywordTimes();
+  }
+
+  logKeywordTimes = () => {
+    console.log('logkeywordtimes called');
+    const keyWordTimes = {};
+    if (this.props.transcript.transcript) {
+      this.props.transcript.transcript.filter(el => el.time).forEach(el => {
+        keyWordTimes[el.time] = false;
+      });
+      console.log('keyword times:', keyWordTimes);
+      this.setState(keyWordTimes);
+    }
+  };
 
   renderTranscriptArr = () => {
     const trans = this.props.transcript;
@@ -11,16 +33,18 @@ class Transcribe extends Component {
       const span = trans.transcript.map((el, i) => {
         const dot = i === trans.transcript.length - 1 ? '.' : '';
         if (el.time) {
-          const offsetTime = el.time + this.props.offset;
           return (
-            <span key={offsetTime}>
+            <span key={el.time}>
               <span
                 className="span-keyword"
-                data-start={offsetTime}
+                data-start={el.time + this.props.offset}
+                data-end={trans.end + this.props.offset}
                 onClick={this.props.handleWordClick}
                 role="button"
-                onKeyPress={this.props.handleWordClick}
+                onKeyPress={() => {}}
                 tabIndex={0}
+                contentEditable
+                suppressContentEditableWarning
               >
                 {el.word + dot}
               </span>
@@ -29,20 +53,31 @@ class Transcribe extends Component {
           );
         }
         return (
-          <span key={el.word + i} className="span-word">
-            {`${el.word + dot} `}
+          <span key={el.word + i}>
+            <span
+              className="span-word"
+              contentEditable
+              suppressContentEditableWarning
+            >
+              {el.word + dot}
+            </span>
+            {` `}
           </span>
         );
       });
+      return <p>{span}</p>;
+    }
+    return false;
+  };
+
+  renderSentencePlay = () => {
+    if (this.props.transcript.transcript) {
       return (
-        <p>
-          <SentencePlay
-            start={trans.start + this.props.offset}
-            end={trans.end + this.props.offset}
-            onClick={this.props.handleWordClick}
-          />
-          {span}
-        </p>
+        <SentencePlay
+          start={this.props.transcript.start + this.props.offset}
+          end={this.props.transcript.end + this.props.offset}
+          onClick={this.props.handleWordClick}
+        />
       );
     }
     return false;
@@ -55,11 +90,10 @@ class Transcribe extends Component {
         className="flex justify-center align-center pt-1 "
       >
         <div id="transcribe-container">
-          <article
-            id="transcribe-box"
-            contentEditable
-            suppressContentEditableWarning
-          >
+          <aside className="flex justify-end">
+            {this.renderSentencePlay()}
+          </aside>
+          <article id="transcribe-box">
             {this.renderTranscriptArr()}
             {this.props.isRecording && this.props.isPlaying
               ? 'Listening, please wait...'

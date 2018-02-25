@@ -3,11 +3,13 @@
 }
 
 #transcribe-container {
+  display: grid;
+  grid-template-columns: 50px 1fr;
   background: white;
   width: 55%;
   min-height: 100%;
   padding-right: 6%;
-  padding-left: 6%;
+  padding-left: 3%;
   padding-top: 6rem;
 
 }
@@ -30,4 +32,6 @@
 .sentence-play {
   cursor: pointer;
   opacity: 0.5;
+  position: relative;
+  top: 5px;
 }
