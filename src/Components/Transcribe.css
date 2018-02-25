@@ -28,7 +28,7 @@
   transition: background 0.5s ease;
 }
 
-.active {
+.keyword-active {
   background: rgba(106, 180, 106, 0.5);
 }
 
@@ -37,4 +37,8 @@
   opacity: 0.5;
   position: relative;
   top: 5px;
+}
+
+.sentence-active {
+  background: yellow;
 }
