@@ -1,44 +1,37 @@
 import React, { Component } from 'react';
-import { Header, Modal, Checkbox, Form, Message } from 'semantic-ui-react';
+import { Header, Modal, Checkbox, Form } from 'semantic-ui-react';
 import '../css/pushy-buttons.css';
 
 class ModalSettings extends Component {
   state = {
+    settings: { offset: 0, continuous: false },
     modalOpen: false,
-    continuous: false,
-    offset: 0,
-    error: false,
-    errorMsg: '',
   };
 
   componentWillReceiveProps(newProps) {
-    this.setState(newProps);
+    this.setState({ settings: newProps.settings });
   }
 
   handleOpen = () => this.setState({ modalOpen: true });
 
-  handleClose = () => this.setState({ modalOpen: false, error: false });
+  handleClose = () => this.setState({ modalOpen: false });
 
-  handleCheck = (e, { name, checked }) =>
-    this.setState({ [name]: checked === true });
+  handleCheck = (e, { name, checked }) => {
+    this.setState({
+      settings: { ...this.state.settings, [name]: checked === true },
+    });
+  };
 
   handleChange = (e, { name, value }) => {
-    if (value) this.setState({ [name]: parseFloat(value) });
+    this.setState({
+      settings: { ...this.state.settings, [name]: parseFloat(value) },
+    });
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    const { offset } = this.state;
-    if (!offset || offset < -2 || offset > 0) {
-      this.setState({
-        error: true,
-        errorMsg: 'Offset must be number between -2 and 0',
-        offset: this.props.offset,
-      });
-    } else {
-      this.props.handleSubmitSettings(this.state);
-      this.handleClose();
-    }
+    this.props.handleSubmitSettings(this.state.settings);
+    this.handleClose();
   };
 
   render() {
@@ -61,17 +54,15 @@ class ModalSettings extends Component {
         size="tiny"
       >
         <Header icon="setting" content="Autoscribe settings" />
-        {/* <Modal.Content /> */}
         <Modal.Actions className="align-left">
-          <Form onSubmit={this.handleSubmit} inverted error={this.state.error}>
-            <Message error header="Oh no!" content={this.state.errorMsg} />
+          <Form onSubmit={this.handleSubmit} inverted>
             <Form.Field>
               <label htmlFor="continuous">Continuous recording</label>
               <Checkbox
                 type="checkbox"
                 name="continuous"
                 id="continuous"
-                checked={this.state.continuous}
+                checked={this.state.settings.continuous}
                 onChange={this.handleCheck}
               />
             </Form.Field>
@@ -84,10 +75,10 @@ class ModalSettings extends Component {
                 type="number"
                 name="offset"
                 id="offset"
-                value={this.state.offset}
+                value={this.state.settings.offset}
                 max={0}
                 min={-2}
-                step={0.1}
+                step={0.05}
                 width={3}
                 onChange={this.handleChange}
               />

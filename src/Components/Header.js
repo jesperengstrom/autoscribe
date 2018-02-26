@@ -9,8 +9,7 @@ const Header = ({
   audioLoadSuccess,
   audioError,
   audioFile,
-  continuous,
-  offset,
+  settings,
   handleSelectFile,
   handleSubmitSettings,
 }) => {
@@ -70,8 +69,7 @@ const Header = ({
       <div className="flex align-center justify-end">
         <p>
           <ModalSettings
-            continuous={continuous}
-            offset={offset}
+            settings={settings}
             handleSubmitSettings={handleSubmitSettings}
           />
         </p>

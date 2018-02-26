@@ -64,22 +64,6 @@ class Audiocontrol extends Component {
             />
           </div>
         </div>
-        {/* <div>
-          <input
-            type="range"
-            min="-2"
-            max="0"
-            step="0.1"
-            value={this.props.offset}
-            onChange={this.props.handleOffset}
-            list="tickmarks"
-          />
-          <datalist id="tickmarks">
-            <option value="-2" label="-2" />
-            <option value="-1" label="-1" />
-            <option value="0" label="0" />
-          </datalist>
-        </div> */}
         <div className="flex justify-center align-center">
           <ProgressBar
             totalTime={this.props.duration || 0}

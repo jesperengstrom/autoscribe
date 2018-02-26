@@ -5,17 +5,19 @@ const speechRec = (() => {
   const recognition = new SpeechRecognition();
   recognition.interimResults = true;
   recognition.maxAlternatives = 1;
-  recognition.continuous = false;
 
-  const startAndListen = (continuous, lang, callback, handleResult) => {
+  const startAndListen = (continuous, lang, handleChange, handleResult) => {
     console.log(`continous is ${continuous}`);
     recognition.continuous = continuous;
     recognition.lang = lang;
-    recognition.start();
-    recognition.onstart = callback;
-    recognition.onend = callback;
-    recognition.onerror = callback;
+    recognition.onstart = handleChange;
+    recognition.onend = handleChange;
+    // recognition.onaudiostart = () => console.log('onaudiostart');
+    recognition.onspeechend = () => console.log('onspeechend');
+    recognition.onaudioend = () => console.log('onaudioend');
+    recognition.onerror = handleChange;
     recognition.onresult = handleResult;
+    recognition.start();
   };
 
   const stop = () => {

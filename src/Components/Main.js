@@ -52,6 +52,10 @@ class Main extends Component {
 
   recognitionArrCallback = obj => {
     this.setState({ transcript: obj });
+    // force rec stop if results isfinal + continous -- remove later?
+    if (this.props.settings.continuous) {
+      this.handleRecordChange();
+    }
   };
 
   /**
@@ -77,7 +81,7 @@ class Main extends Component {
     if (!this.state.pendingRecording && !this.state.isRecording) {
       this.setState({ pendingRecording: true }, () =>
         speechRec.startAndListen(
-          this.props.continuous,
+          this.props.settings.continuous,
           this.state.lang,
           this.onRecognitionChange,
           this.onRecognitionResult,
@@ -147,10 +151,6 @@ class Main extends Component {
     this.setState({ lang });
   };
 
-  // handleOffset = e => {
-  //   this.setState({ offset: parseFloat(e.target.value) });
-  // };
-
   handleAudioError = e => {
     // don't display error when no file loaded
     if (this.props.audioFile.filename === 'No audiofile loaded') {
@@ -195,30 +195,29 @@ class Main extends Component {
         />
         <Audiocontrol
           audioLoadSuccess={this.props.audioLoadSuccess}
+          duration={this.props.audioFile.duration}
+          offset={this.props.settings.offset}
           isRecording={this.state.isRecording}
           pendingRecording={this.state.pendingRecording}
-          handleRecordChange={this.handleRecordChange}
           isPlaying={this.state.isPlaying}
-          handlePlaybackChange={this.handlePlaybackChange}
-          duration={this.props.audioFile.duration}
           currentTime={this.state.currentTime}
-          handleSeek={this.handleSeek}
           volume={this.state.volume}
-          handleVolumeChange={this.handleVolumeChange}
           speed={this.state.speed}
-          handleSpeedChange={this.handleSpeedChange}
           lang={this.state.lang}
+          handleRecordChange={this.handleRecordChange}
+          handlePlaybackChange={this.handlePlaybackChange}
+          handleSeek={this.handleSeek}
+          handleVolumeChange={this.handleVolumeChange}
+          handleSpeedChange={this.handleSpeedChange}
           handleLangChange={this.handleLangChange}
-          offset={this.state.offset}
-          // handleOffset={this.handleOffset}
         />
         <Transcribe
+          offset={this.props.settings.offset}
           currentTime={this.state.currentTime}
           transcript={this.state.transcript}
           isRecording={this.state.isRecording}
           isPlaying={this.state.isPlaying}
           handleWordClick={this.handleWordClick}
-          offset={this.props.offset}
         />
       </main>
     );

@@ -65,7 +65,6 @@ const utils = (() => {
     // filter out empty results
     if (modifiedResult) {
       let newKeywords = makeKeywordArray(modifiedResult, time);
-      // console.log(newKeywords);
       newKeywords = newKeywords.length > 1 ? newKeywords[0] : newKeywords;
       keywords.push(...newKeywords);
     }

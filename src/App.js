@@ -12,14 +12,15 @@ class App extends Component {
       duration: 0,
       path: '',
     },
-    continuous: false,
-    offset: -1.5,
+    settings: { continuous: false, offset: -1.5 },
   };
 
   componentDidMount() {
-    const savedAudioFile = JSON.parse(localStorage.getItem('file'));
-    if (savedAudioFile) {
-      this.handleSelectFile(savedAudioFile);
+    if (typeof localStorage !== 'undefined') {
+      const savedAudioFile = JSON.parse(localStorage.getItem('file'));
+      const savedSettings = JSON.parse(localStorage.getItem('settings'));
+      if (savedSettings) this.handleSubmitSettings(savedSettings);
+      if (savedAudioFile) this.handleSelectFile(savedAudioFile);
     }
   }
 
@@ -27,7 +28,10 @@ class App extends Component {
     const audioObj = { ...this.state.audioFile };
     audioObj.duration = e.target.duration;
     this.setState({ audioLoadSuccess: true, audioFile: audioObj });
-    localStorage.setItem('file', JSON.stringify(this.state.audioFile));
+
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('file', JSON.stringify(this.state.audioFile));
+    }
   };
 
   onLoadError = error => {
@@ -45,9 +49,11 @@ class App extends Component {
     });
   };
 
-  handleSubmitSettings = modalState => {
-    const { continuous, offset } = modalState;
-    this.setState({ continuous, offset });
+  handleSubmitSettings = settings => {
+    this.setState({ settings });
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('settings', JSON.stringify(settings));
+    }
   };
 
   render() {
