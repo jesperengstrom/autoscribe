@@ -5,11 +5,11 @@ import './Transcribe.css';
 class Transcribe extends Component {
   state = {
     keywordTimes: false,
-    sentenceTimes: false,
+    sentenceTimes: {},
   };
 
   componentWillReceiveProps(newProps) {
-    // when new results come in -> save keyword times in state
+    // when transcriptions come in -> save keyword & sentence times in state
     if (
       !newProps.isPlaying &&
       !newProps.isRecording &&
@@ -18,7 +18,7 @@ class Transcribe extends Component {
       this.logKeywordTimes();
       this.logSentenceTime();
     }
-    // playing audio with keywords present... match for current keyword
+    // playing audio with keywords logged... match for current keyword
     if (
       newProps.isPlaying &&
       !newProps.isRecording &&
@@ -26,45 +26,39 @@ class Transcribe extends Component {
     ) {
       this.wordPlayingNow();
     }
-    // playing audio with transcription present... match current sentence.
-    if (!newProps.isRecording && newProps.transcript.start) {
+    // not recording with sentence logged... match current sentence.
+    if (
+      // newProps.isPlaying &&
+      !newProps.isRecording &&
+      Object.keys(this.state.sentenceTimes).length > 0
+    ) {
       this.sentencePlayingNow();
     }
   }
 
   logKeywordTimes = () => {
-    const times = {};
+    const kTimes = {};
     this.props.transcript.transcript.filter(el => el.time).forEach(el => {
-      times[el.time] = false;
+      kTimes[el.time] = false;
     });
     // if new number of keywords differ from present, set new state
     if (
-      Object.keys(times).length !== Object.keys(this.state.keywordTimes).length
+      Object.keys(kTimes).length !== Object.keys(this.state.keywordTimes).length
     ) {
-      this.setState({ keywordTimes: times });
+      this.setState({ keywordTimes: kTimes });
     }
   };
 
   logSentenceTime = () => {
-    console.log('logsentencetime running');
-    const times = {
-      start: false,
-      end: this.props.transcript.end,
-    };
-    // if no such time prop present, set state
-    if (
-      this.state.sentenceTimes &&
-      !this.state.sentenceTimes.hasOwnProperty(this.props.transcript.start)
-    ) {
-      this.setState({
-        sentenceTimes: Object.assign(
-          this.state.sentenceTimes,
-          {
-            [this.props.transcript.start]: times,
-          },
-          () => console.log('set state', this.state.sentenceTimes),
-        ),
+    // if no state or no such time prop present, set state
+    if (!this.state.sentenceTimes.hasOwnProperty(this.props.transcript.start)) {
+      const sTimes = Object.assign(this.state.sentenceTimes, {
+        [this.props.transcript.start]: {
+          start: false,
+          end: this.props.transcript.end,
+        },
       });
+      this.setState({ sentenceTimes: sTimes });
     }
   };
 
@@ -101,12 +95,24 @@ class Transcribe extends Component {
 
   sentencePlayingNow = () => {
     const newState = Object.assign({}, this.state.sentenceTimes);
-    Object.keys(this.state.sentenceTimes).forEach(el => {
-      // if a keyword's time is within (1 offset) sec from current audio time -> set state
-      if (this.props.currentTime > el && this.props.currentTime < el.end) {
+    Object.keys(newState).forEach(el => {
+      // if currentTime is within sentence time -> true
+      if (
+        this.props.currentTime > el &&
+        this.props.currentTime < newState[el].end
+      ) {
         newState[el].start = true;
-      } else newState[el].start = false;
-      this.setState({ keywordTimes: newState });
+        // outside -> false
+      } else if (
+        this.props.currentTime < el ||
+        this.props.currentTime > newState[el].end
+      ) {
+        newState[el].start = false;
+      }
+      // set state if it differs from current
+      return this.state.sentenceTimes[el].start !== newState[el].start
+        ? this.setState({ sentenceTimes: newState })
+        : false;
     });
   };
 
@@ -153,7 +159,7 @@ class Transcribe extends Component {
       return (
         <p
           className={`p-sentence ${
-            this.state.sentenceTimes &&
+            this.state.sentenceTimes[trans.start] &&
             this.state.sentenceTimes[trans.start].start
               ? 'sentence-active'
               : ''

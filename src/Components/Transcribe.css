@@ -39,6 +39,9 @@
   top: 5px;
 }
 
+.p-sentence {
+  transition: background 0.5s ease;
+}
 .sentence-active {
-  background: yellow;
+  background: rgba(255, 255, 0, 0.1)
 }
