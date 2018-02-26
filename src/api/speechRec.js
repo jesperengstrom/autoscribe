@@ -7,7 +7,9 @@ const speechRec = (() => {
   recognition.maxAlternatives = 1;
   recognition.continuous = false;
 
-  const startAndListen = (lang, callback, handleResult) => {
+  const startAndListen = (continuous, lang, callback, handleResult) => {
+    console.log(`continous is ${continuous}`);
+    recognition.continuous = continuous;
     recognition.lang = lang;
     recognition.start();
     recognition.onstart = callback;

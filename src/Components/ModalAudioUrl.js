@@ -15,7 +15,7 @@ class ModalAudioUrl extends Component {
     if (this.state.url) {
       e.preventDefault();
       const fileObj = { filename: this.state.url, path: this.state.url };
-      this.props.onSelectFile(fileObj);
+      this.props.handleSelectFile(fileObj);
     }
     this.handleClose();
   };

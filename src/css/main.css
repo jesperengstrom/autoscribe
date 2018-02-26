@@ -103,9 +103,16 @@
   white-space: nowrap;
 }
 
+.cursor-pointer {
+  cursor:pointer;
+}
+
+.align-left {
+  text-align: left !important;
+}
+
 /* UI tweaks  */
 
 .ui.inline.dropdown>.text {
   font-weight: normal;
 }
-

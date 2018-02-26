@@ -17,7 +17,6 @@ class Main extends Component {
     speed: 1,
     lang: 'sv',
     transcript: {},
-    offset: -1.5,
     stopOn: false,
   };
 
@@ -78,6 +77,7 @@ class Main extends Component {
     if (!this.state.pendingRecording && !this.state.isRecording) {
       this.setState({ pendingRecording: true }, () =>
         speechRec.startAndListen(
+          this.props.continuous,
           this.state.lang,
           this.onRecognitionChange,
           this.onRecognitionResult,
@@ -147,9 +147,9 @@ class Main extends Component {
     this.setState({ lang });
   };
 
-  handleOffset = e => {
-    this.setState({ offset: parseFloat(e.target.value) });
-  };
+  // handleOffset = e => {
+  //   this.setState({ offset: parseFloat(e.target.value) });
+  // };
 
   handleAudioError = e => {
     // don't display error when no file loaded
@@ -210,7 +210,7 @@ class Main extends Component {
           lang={this.state.lang}
           handleLangChange={this.handleLangChange}
           offset={this.state.offset}
-          handleOffset={this.handleOffset}
+          // handleOffset={this.handleOffset}
         />
         <Transcribe
           currentTime={this.state.currentTime}
@@ -218,7 +218,7 @@ class Main extends Component {
           isRecording={this.state.isRecording}
           isPlaying={this.state.isPlaying}
           handleWordClick={this.handleWordClick}
-          offset={this.state.offset}
+          offset={this.props.offset}
         />
       </main>
     );

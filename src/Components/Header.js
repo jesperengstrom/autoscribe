@@ -1,10 +1,19 @@
 import React from 'react';
 import ModalAudioUrl from './ModalAudioUrl';
+import ModalSettings from './ModalSettings';
 import '../css/pushy-buttons.css';
 import '../css/main.css';
 import './Header.css';
 
-const Header = ({ audioLoadSuccess, audioError, audioFile, onSelectFile }) => {
+const Header = ({
+  audioLoadSuccess,
+  audioError,
+  audioFile,
+  continuous,
+  offset,
+  handleSelectFile,
+  handleSubmitSettings,
+}) => {
   const onChange = e => {
     // in case a file is selected, reslected and aborted
     if (!e.target.files[0]) {
@@ -17,7 +26,7 @@ const Header = ({ audioLoadSuccess, audioError, audioFile, onSelectFile }) => {
       // set duration to 0 while evaluating file
       duration: 0,
     };
-    return onSelectFile(sourceObj);
+    return handleSelectFile(sourceObj);
   };
 
   const loadStatus = () => {
@@ -50,12 +59,21 @@ const Header = ({ audioLoadSuccess, audioError, audioFile, onSelectFile }) => {
           <i className="large file audio outline icon" />
           Choose file
         </label>
-        <ModalAudioUrl onSelectFile={onSelectFile} />
+        <ModalAudioUrl handleSelectFile={handleSelectFile} />
       </div>
       <div className="flex align-center">
         <p className={`nowrap ml-1 ${loadStatus()}`}>
           {audioFile.filename}
           {audioError && <span className="ml-1">{audioError}</span>}
+        </p>
+      </div>
+      <div className="flex align-center justify-end">
+        <p>
+          <ModalSettings
+            continuous={continuous}
+            offset={offset}
+            handleSubmitSettings={handleSubmitSettings}
+          />
         </p>
       </div>
       <div className="flex align-center justify-end">

@@ -12,22 +12,16 @@ class App extends Component {
       duration: 0,
       path: '',
     },
+    continuous: false,
+    offset: -1.5,
   };
 
   componentDidMount() {
     const savedAudioFile = JSON.parse(localStorage.getItem('file'));
     if (savedAudioFile) {
-      this.onSelectFile(savedAudioFile);
+      this.handleSelectFile(savedAudioFile);
     }
   }
-
-  onSelectFile = obj => {
-    this.setState({
-      audioFile: obj,
-      audioLoadSuccess: false,
-      audioError: false,
-    });
-  };
 
   onLoadSuccess = e => {
     const audioObj = { ...this.state.audioFile };
@@ -43,13 +37,29 @@ class App extends Component {
     });
   };
 
+  handleSelectFile = obj => {
+    this.setState({
+      audioFile: obj,
+      audioLoadSuccess: false,
+      audioError: false,
+    });
+  };
+
+  handleSubmitSettings = modalState => {
+    const { continuous, offset } = modalState;
+    this.setState({ continuous, offset });
+  };
+
   render() {
     return (
       <div id="app-container">
-        <Header {...this.state} onSelectFile={this.onSelectFile} />
+        <Header
+          {...this.state}
+          handleSelectFile={this.handleSelectFile}
+          handleSubmitSettings={this.handleSubmitSettings}
+        />
         <Main
-          audioFile={this.state.audioFile}
-          audioLoadSuccess={this.state.audioLoadSuccess}
+          {...this.state}
           onLoadSuccess={this.onLoadSuccess}
           onLoadError={this.onLoadError}
         />
