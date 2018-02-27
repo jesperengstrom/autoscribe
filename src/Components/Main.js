@@ -126,7 +126,7 @@ class Main extends Component {
   stopOn = val => {
     this.setState({ stopOn: val });
     const interval = setInterval(() => {
-      // console.log('running interval!');
+      console.log('running interval!');
       if (this.state.currentTime > val || !this.state.isPlaying) {
         this.handlePlaybackChange(false);
         clearInterval(interval);

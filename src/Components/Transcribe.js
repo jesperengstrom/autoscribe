@@ -4,49 +4,55 @@ import './Transcribe.css';
 
 class Transcribe extends Component {
   state = {
+    newTranscription: false,
     keywordTimes: false,
     sentenceTimes: {},
+    transcriptionJSX: [],
+    sentencePlayJSX: [],
   };
 
   componentWillReceiveProps(newProps) {
-    // when transcriptions come in -> save keyword & sentence times in state
-    if (
-      !newProps.isPlaying &&
-      !newProps.isRecording &&
-      newProps.transcript.transcript
-    ) {
-      this.logKeywordTimes();
-      this.logSentenceTime();
+    if (newProps.transcript.start !== this.props.transcript.start) {
+      // <-- differs from current = new transcription incoming
+      this.setState({ newTranscription: true });
     }
-    // playing audio with keywords logged... match for current keyword
     if (
       newProps.isPlaying &&
       !newProps.isRecording &&
       this.state.keywordTimes
     ) {
+      // playing audio with keywords logged... match for current keyword
       this.wordPlayingNow();
     }
-    // not recording with sentence logged... match current sentence.
+
     if (
-      // newProps.isPlaying &&
       !newProps.isRecording &&
       Object.keys(this.state.sentenceTimes).length > 0
     ) {
+      // not recording with sentence logged... match current sentence.
       this.sentencePlayingNow();
     }
   }
 
+  componentWillUpdate() {
+    if (this.state.newTranscription) {
+      // we have a new unlogged transcripton here
+      this.logKeywordTimes();
+      this.logSentenceTime();
+    }
+  }
+
   logKeywordTimes = () => {
-    const kTimes = {};
+    const kTimes = { ...this.state.keywordTimes };
     this.props.transcript.transcript.filter(el => el.time).forEach(el => {
       kTimes[el.time] = false;
     });
     // if new number of keywords differ from present, set new state
-    if (
-      Object.keys(kTimes).length !== Object.keys(this.state.keywordTimes).length
-    ) {
-      this.setState({ keywordTimes: kTimes });
-    }
+    // if (
+    //   Object.keys(kTimes).length !== Object.keys(this.state.keywordTimes).length
+    // ) {
+    this.setState({ keywordTimes: kTimes });
+    // }
   };
 
   logSentenceTime = () => {
@@ -58,7 +64,20 @@ class Transcribe extends Component {
           end: this.props.transcript.end,
         },
       });
-      this.setState({ sentenceTimes: sTimes });
+      this.setState({
+        sentenceTimes: sTimes,
+        newTranscription: false,
+        transcriptionJSX: [
+          // <-- OBS!! dålig placering
+          ...this.state.transcriptionJSX,
+          this.renderTranscriptArr(),
+        ],
+        sentencePlayJSX: [
+          // <-- OBS!!
+          ...this.state.sentencePlayJSX,
+          this.renderSentencePlay(),
+        ],
+      });
     }
   };
 
@@ -187,6 +206,11 @@ class Transcribe extends Component {
   };
 
   render() {
+    const isRecording =
+      this.props.isRecording && this.props.isPlaying
+        ? 'Listening, please wait...'
+        : '';
+
     return (
       <section
         id="transcribe-section"
@@ -194,13 +218,11 @@ class Transcribe extends Component {
       >
         <div id="transcribe-container">
           <aside className="flex justify-end">
-            {this.renderSentencePlay()}
+            {this.state.sentencePlayJSX}
           </aside>
           <article id="transcribe-box">
-            {this.renderTranscriptArr()}
-            {this.props.isRecording && this.props.isPlaying
-              ? 'Listening, please wait...'
-              : ''}
+            {this.state.transcriptionJSX}
+            {isRecording}
           </article>
         </div>
       </section>
