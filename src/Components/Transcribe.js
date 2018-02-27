@@ -70,8 +70,8 @@ class Transcribe extends Component {
     Object.keys(this.state.keywordTimes).forEach(el => {
       // if a keyword's time is within (1 offset) sec from current audio time -> set state
       if (
-        el > this.props.currentTime - this.props.settings.offset &&
-        el < this.props.currentTime - this.props.settings.offset * 2
+        el > this.props.currentTime - this.props.offset &&
+        el < this.props.currentTime - this.props.offset * 2
       ) {
         newState[el] = true;
         this.setState({ keywordTimes: newState }, () =>
@@ -98,14 +98,14 @@ class Transcribe extends Component {
     Object.keys(newState).forEach(el => {
       // if currentTime is within sentence time -> true
       if (
-        this.props.currentTime > el &&
-        this.props.currentTime < newState[el].end
+        this.props.currentTime - this.props.offset > el &&
+        this.props.currentTime - this.props.offset < newState[el].end
       ) {
         newState[el].start = true;
         // outside -> false
       } else if (
-        this.props.currentTime < el ||
-        this.props.currentTime > newState[el].end
+        this.props.currentTime - this.props.offset < el ||
+        this.props.currentTime - this.props.offset > newState[el].end
       ) {
         newState[el].start = false;
       }
@@ -128,8 +128,8 @@ class Transcribe extends Component {
                 className={`span-keyword ${
                   this.state.keywordTimes[el.time] ? 'keyword-active' : ''
                 }`}
-                data-start={el.time + this.props.settings.offset}
-                data-end={trans.end + this.props.settings.offset}
+                data-start={el.time + this.props.offset}
+                data-end={trans.end + this.props.offset}
                 onClick={this.props.handleWordClick}
                 role="button"
                 onKeyPress={() => {}}
@@ -176,8 +176,9 @@ class Transcribe extends Component {
     if (this.props.transcript.transcript) {
       return (
         <SentencePlay
-          start={this.props.transcript.start + this.props.settings.offset}
-          end={this.props.transcript.end + this.props.settings.offset}
+          // offset * 35 seems to equal delay between play press & starttime
+          start={this.props.transcript.start + this.props.offset * 0.35}
+          end={this.props.transcript.end + this.props.offset * 0.35}
           onClick={this.props.handleWordClick}
         />
       );

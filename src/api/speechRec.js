@@ -12,9 +12,8 @@ const speechRec = (() => {
     recognition.lang = lang;
     recognition.onstart = handleChange;
     recognition.onend = handleChange;
-    // recognition.onaudiostart = () => console.log('onaudiostart');
-    recognition.onspeechend = () => console.log('onspeechend');
-    recognition.onaudioend = () => console.log('onaudioend');
+    recognition.onspeechstart = () =>
+      console.log('start time: onspeechstart evemt');
     recognition.onerror = handleChange;
     recognition.onresult = handleResult;
     recognition.start();

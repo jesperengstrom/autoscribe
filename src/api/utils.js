@@ -41,7 +41,10 @@ const utils = (() => {
   };
 
   const findKeywords = (res, time, callback) => {
-    if (!startTime) startTime = time;
+    if (!startTime) {
+      console.log('start time: findkeywords call');
+      startTime = time;
+    }
     const { isFinal } = res[0];
     const latestResult = res[0][0].transcript;
     let modifiedResult = '';
