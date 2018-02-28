@@ -1,0 +1,9 @@
+.span-keyword {
+  background: rgba(106, 180, 106, 0.18);
+  white-space: nowrap;
+  transition: background 0.5s ease;
+}
+
+.keyword-playing {
+  background: rgba(106, 180, 106, 0.5);
+}

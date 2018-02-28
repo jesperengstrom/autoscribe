@@ -112,7 +112,7 @@ class Main extends Component {
   /**
    * both 'play' icon and keywords
    */
-  handleWordClick = e => {
+  handleKeywordClick = e => {
     const start = parseFloat(e.target.getAttribute('data-start'));
     const end = parseFloat(e.target.getAttribute('data-end'));
     this.handleSeek(start);
@@ -217,7 +217,7 @@ class Main extends Component {
           transcript={this.state.transcript}
           isRecording={this.state.isRecording}
           isPlaying={this.state.isPlaying}
-          handleWordClick={this.handleWordClick}
+          handleKeywordClick={this.handleKeywordClick}
         />
       </main>
     );

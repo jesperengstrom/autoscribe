@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
+import Sentence from './Sentence';
+import { Word, Keyword } from './Words';
 import SentencePlay from './SentencePlay';
 import './Transcribe.css';
 
 class Transcribe extends Component {
   state = {
     newTranscription: false,
-    keywordTimes: false,
-    sentenceTimes: {},
-    transcriptionJSX: [],
-    sentencePlayJSX: [],
+    keywordPlaying: false,
+    sentencePlaying: {},
+    transcripts: [],
   };
 
   componentWillReceiveProps(newProps) {
@@ -19,15 +20,15 @@ class Transcribe extends Component {
     if (
       newProps.isPlaying &&
       !newProps.isRecording &&
-      this.state.keywordTimes
+      this.state.keywordPlaying
     ) {
       // playing audio with keywords logged... match for current keyword
-      this.wordPlayingNow();
+      this.keywordPlayingNow();
     }
 
     if (
       !newProps.isRecording &&
-      Object.keys(this.state.sentenceTimes).length > 0
+      Object.keys(this.state.sentencePlaying).length > 0
     ) {
       // not recording with sentence logged... match current sentence.
       this.sentencePlayingNow();
@@ -37,158 +38,87 @@ class Transcribe extends Component {
   componentWillUpdate() {
     if (this.state.newTranscription) {
       // we have a new unlogged transcripton here
-      this.logKeywordTimes();
-      this.logSentenceTime();
+      this.logKeywords();
+      this.logSentences();
     }
   }
 
-  logKeywordTimes = () => {
-    const kTimes = { ...this.state.keywordTimes };
+  logKeywords = () => {
+    const kTimes = { ...this.state.keywordPlaying };
     this.props.transcript.transcript.filter(el => el.time).forEach(el => {
       kTimes[el.time] = false;
     });
-    // if new number of keywords differ from present, set new state
-    // if (
-    //   Object.keys(kTimes).length !== Object.keys(this.state.keywordTimes).length
-    // ) {
-    this.setState({ keywordTimes: kTimes });
-    // }
+    this.setState({ keywordPlaying: kTimes });
   };
 
-  logSentenceTime = () => {
+  logSentences = () => {
     // if no state or no such time prop present, set state
-    if (!this.state.sentenceTimes.hasOwnProperty(this.props.transcript.start)) {
-      const sTimes = Object.assign(this.state.sentenceTimes, {
+    if (
+      !this.state.sentencePlaying.hasOwnProperty(this.props.transcript.start)
+    ) {
+      const sTimes = Object.assign(this.state.sentencePlaying, {
         [this.props.transcript.start]: {
-          start: false,
+          playing: false,
           end: this.props.transcript.end,
         },
       });
       this.setState({
-        sentenceTimes: sTimes,
+        sentencePlaying: sTimes,
         newTranscription: false,
-        transcriptionJSX: [
-          // <-- OBS!! dålig placering
-          ...this.state.transcriptionJSX,
-          this.renderTranscriptArr(),
-        ],
-        sentencePlayJSX: [
-          // <-- OBS!!
-          ...this.state.sentencePlayJSX,
-          this.renderSentencePlay(),
-        ],
+        transcripts: [...this.state.transcripts, this.props.transcript],
       });
     }
   };
 
-  /**
-   * loop through keyword times
-   */
-  wordPlayingNow = () => {
-    const newState = Object.assign({}, this.state.keywordTimes);
-    Object.keys(this.state.keywordTimes).forEach(el => {
+  keywordPlayingNow = () => {
+    const newState = Object.assign({}, this.state.keywordPlaying);
+    Object.keys(this.state.keywordPlaying).forEach(el => {
       // if a keyword's time is within (1 offset) sec from current audio time -> set state
       if (
         el > this.props.currentTime - this.props.offset &&
         el < this.props.currentTime - this.props.offset * 2
       ) {
         newState[el] = true;
-        this.setState({ keywordTimes: newState }, () =>
-          this.wordNotPlayingNow(el),
+        this.setState({ keywordPlaying: newState }, () =>
+          this.keywordNotPlayingNow(el),
         );
       }
     });
   };
 
   /**
-   * turn focus off
+   * turn focus off after 1 sec
    */
-  wordNotPlayingNow = prop => {
+  keywordNotPlayingNow = prop => {
     setTimeout(() => {
-      const newState = Object.assign(this.state.keywordTimes, {
+      const newState = Object.assign(this.state.keywordPlaying, {
         [prop]: false,
       });
-      this.setState({ keywordTimes: newState });
+      this.setState({ keywordPlaying: newState });
     }, 1000);
   };
 
   sentencePlayingNow = () => {
-    const newState = Object.assign({}, this.state.sentenceTimes);
+    const newState = Object.assign({}, this.state.sentencePlaying);
     Object.keys(newState).forEach(el => {
       // if currentTime is within sentence time -> true
       if (
         this.props.currentTime - this.props.offset > el &&
         this.props.currentTime - this.props.offset < newState[el].end
       ) {
-        newState[el].start = true;
+        newState[el].playing = true;
         // outside -> false
       } else if (
         this.props.currentTime - this.props.offset < el ||
         this.props.currentTime - this.props.offset > newState[el].end
       ) {
-        newState[el].start = false;
+        newState[el].playing = false;
       }
       // set state if it differs from current
-      return this.state.sentenceTimes[el].start !== newState[el].start
-        ? this.setState({ sentenceTimes: newState })
+      return this.state.sentencePlaying[el].playing !== newState[el].playing
+        ? this.setState({ sentencePlaying: newState })
         : false;
     });
-  };
-
-  renderTranscriptArr = () => {
-    const trans = this.props.transcript;
-    if (trans.transcript) {
-      const span = trans.transcript.map((el, i) => {
-        const dot = i === trans.transcript.length - 1 ? '.' : '';
-        if (el.time) {
-          return (
-            <span key={el.time}>
-              <span
-                className={`span-keyword ${
-                  this.state.keywordTimes[el.time] ? 'keyword-active' : ''
-                }`}
-                data-start={el.time + this.props.offset}
-                data-end={trans.end + this.props.offset}
-                onClick={this.props.handleWordClick}
-                role="button"
-                onKeyPress={() => {}}
-                tabIndex={0}
-                contentEditable
-                suppressContentEditableWarning
-              >
-                {el.word + dot}
-              </span>
-              {` `}
-            </span>
-          );
-        }
-        return (
-          <span key={el.word + i}>
-            <span
-              className="span-word"
-              contentEditable
-              suppressContentEditableWarning
-            >
-              {el.word + dot}
-            </span>
-            {` `}
-          </span>
-        );
-      });
-      return (
-        <p
-          className={`p-sentence ${
-            this.state.sentenceTimes[trans.start] &&
-            this.state.sentenceTimes[trans.start].start
-              ? 'sentence-active'
-              : ''
-          }`}
-        >
-          {span}
-        </p>
-      );
-    }
-    return false;
   };
 
   renderSentencePlay = () => {
@@ -198,7 +128,7 @@ class Transcribe extends Component {
           // offset * 35 seems to equal delay between play press & starttime
           start={this.props.transcript.start + this.props.offset * 0.35}
           end={this.props.transcript.end + this.props.offset * 0.35}
-          onClick={this.props.handleWordClick}
+          handleKeywordClick={this.props.handleKeywordClick}
         />
       );
     }
@@ -207,9 +137,11 @@ class Transcribe extends Component {
 
   render() {
     const isRecording =
-      this.props.isRecording && this.props.isPlaying
-        ? 'Listening, please wait...'
-        : '';
+      this.props.isRecording && this.props.isPlaying ? (
+        <p>Listening, please wait...</p>
+      ) : (
+        ''
+      );
 
     return (
       <section
@@ -217,13 +149,25 @@ class Transcribe extends Component {
         className="flex justify-center align-center pt-1 "
       >
         <div id="transcribe-container">
-          <aside className="flex justify-end">
-            {this.state.sentencePlayJSX}
-          </aside>
-          <article id="transcribe-box">
-            {this.state.transcriptionJSX}
-            {isRecording}
-          </article>
+          {this.state.transcripts.map(sen => (
+            <Sentence playing={this.state.sentencePlaying[sen.start].playing}>
+              {sen.transcript.map(
+                word =>
+                  word.time ? (
+                    <Keyword
+                      start={word.time + this.props.offset}
+                      end={sen.end}
+                      playing={this.state.keywordPlaying[word.time]}
+                      handleKeywordClick={this.props.handleKeywordClick}
+                      word={word.word}
+                    />
+                  ) : (
+                    <Word word={word.word} />
+                  ),
+              )}
+            </Sentence>
+          ))}
+          {isRecording}
         </div>
       </section>
     );
