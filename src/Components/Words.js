@@ -5,6 +5,7 @@ export const Word = props => (
   <React.Fragment>
     <span className="span-word" contentEditable suppressContentEditableWarning>
       {props.word}
+      {props.last ? '.' : ''}
     </span>
     {` `}
   </React.Fragment>
@@ -26,6 +27,7 @@ export const Keyword = props => {
         suppressContentEditableWarning
       >
         {props.word}
+        {props.last ? '.' : ''}
       </span>
       {` `}
     </React.Fragment>

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { Loader } from 'semantic-ui-react';
 import Sentence from './Sentence';
 import { Word, Keyword } from './Words';
-import SentencePlay from './SentencePlay';
+// import SentencePlay from './SentencePlay';
 import './Transcribe.css';
 
 class Transcribe extends Component {
@@ -121,26 +122,16 @@ class Transcribe extends Component {
     });
   };
 
-  renderSentencePlay = () => {
-    if (this.props.transcript.transcript) {
-      return (
-        <SentencePlay
-          // offset * 35 seems to equal delay between play press & starttime
-          start={this.props.transcript.start + this.props.offset * 0.35}
-          end={this.props.transcript.end + this.props.offset * 0.35}
-          handleKeywordClick={this.props.handleKeywordClick}
-        />
-      );
-    }
-    return false;
-  };
-
   render() {
     const isRecording =
       this.props.isRecording && this.props.isPlaying ? (
-        <p>Listening, please wait...</p>
+        <span>
+          <Loader size="tiny" active inline />
+          {` `}
+          <span>Listening...</span>
+        </span>
       ) : (
-        ''
+        false
       );
 
     return (
@@ -152,7 +143,7 @@ class Transcribe extends Component {
           {this.state.transcripts.map(sen => (
             <Sentence playing={this.state.sentencePlaying[sen.start].playing}>
               {sen.transcript.map(
-                word =>
+                (word, i) =>
                   word.time ? (
                     <Keyword
                       start={word.time + this.props.offset}
@@ -160,9 +151,13 @@ class Transcribe extends Component {
                       playing={this.state.keywordPlaying[word.time]}
                       handleKeywordClick={this.props.handleKeywordClick}
                       word={word.word}
+                      last={i === sen.transcript.length - 1}
                     />
                   ) : (
-                    <Word word={word.word} />
+                    <Word
+                      last={i === sen.transcript.length - 1}
+                      word={word.word}
+                    />
                   ),
               )}
             </Sentence>
