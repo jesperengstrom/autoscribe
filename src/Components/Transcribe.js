@@ -139,6 +139,7 @@ class Transcribe extends Component {
         id="transcribe-section"
         className="flex justify-center align-center pt-1 "
       >
+        <div />
         <div id="transcribe-container">
           {this.state.transcripts.map(sen => (
             <Sentence
@@ -172,6 +173,11 @@ class Transcribe extends Component {
             </Sentence>
           ))}
           {isRecording}
+        </div>
+        <div id="editor-area-right" className="flex justify-end align-end">
+          <div>
+            <button>Export as .md</button>
+          </div>
         </div>
       </section>
     );

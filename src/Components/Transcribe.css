@@ -1,16 +1,19 @@
 #transcribe-section {
   background: rgb(227, 227, 227);
+  display: grid;
+  grid-template-columns: 1fr 2.3fr 1fr;
 }
 
 #transcribe-container {
   /* display: grid;
   grid-template-columns: 100%; */
   background: white;
-  width: 55%;
+  /* width: 55%; */
   min-height: 100%;
-  padding-right: 6%;
+  padding: 6rem 6rem 1rem 6rem;
+  /* padding-right: 6%;
   padding-left: 6%;
-  padding-top: 6rem;
+  padding-top: 6rem; */
 }
 
 #transcribe-box {
@@ -18,4 +21,9 @@
   height: 100%;
   border:1px solid rgb(218, 218, 218);
 
+}
+
+#editor-area-right {
+  height: 100%;
+  padding: 2rem;
 }
