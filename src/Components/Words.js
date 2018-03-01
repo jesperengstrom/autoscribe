@@ -12,14 +12,18 @@ export const Word = props => (
 );
 
 export const Keyword = props => {
-  const keywordPlaying = props.playing ? 'keyword-playing' : '';
+  const keywordPlaying = props.nowPlaying ? 'keyword-playing' : '';
+
+  const handleClick = () => {
+    // no keywordplay while recording
+    if (!props.isRecording) props.handleSelectionPlay(props.start, props.end);
+  };
+
   return (
     <React.Fragment>
       <span
         className={`span-keyword ${keywordPlaying}`}
-        data-start={props.start}
-        data-end={props.end}
-        onClick={props.handleKeywordClick}
+        onClick={handleClick}
         role="button"
         onKeyPress={() => {}}
         tabIndex={0}

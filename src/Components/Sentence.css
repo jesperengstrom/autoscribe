@@ -3,9 +3,15 @@
   font-size: 18px;
   height: fit-content;
   transition: background 0.5s ease;
+  color: black;
 }
+
 .sentence-playing {
   background: rgba(255, 255, 0, 0.1)
+}
+
+.tone-down {
+  color: rgb(151, 151, 151);
 }
 
 .sentence-play {
@@ -29,4 +35,9 @@
 
 .ui.popup {
   padding: 0.5em 1em !important;
+}
+
+/* to force popup to hide while recording */
+.ui.left.center.popup.transition.visible.display-none {
+  display: none !important;
 }

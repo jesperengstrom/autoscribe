@@ -128,6 +128,19 @@ class Main extends Component {
       );
   };
 
+  handleSelectionPlay = (st, en) => {
+    if (st) {
+      const start = parseFloat(st);
+      const end = parseFloat(en);
+      this.handleSeek(start);
+      this.handlePlaybackChange(true);
+      // state check prevent from being more & more setIntervals
+      if (!this.state.stopOn) {
+        this.stopOn(end);
+      }
+    } else console.log(`handleSelectionPlay got a ${st}`);
+  };
+
   stopOn = val => {
     this.setState({ stopOn: val });
     const interval = setInterval(() => {
@@ -223,7 +236,7 @@ class Main extends Component {
           transcript={this.state.transcript}
           isRecording={this.state.isRecording}
           isPlaying={this.state.isPlaying}
-          handleKeywordClick={this.handleKeywordClick}
+          handleSelectionPlay={this.handleSelectionPlay}
         />
       </main>
     );

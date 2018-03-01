@@ -149,21 +149,24 @@ class Transcribe extends Component {
         >
           {this.state.transcripts.map(sen => (
             <Sentence
-              playing={this.state.sentencePlaying[sen.start].playing}
-              handleKeywordClick={this.props.handleKeywordClick}
+              nowPlaying={this.state.sentencePlaying[sen.start].playing}
+              handleSelectionPlay={this.props.handleSelectionPlay}
               // offset * 35 seems to equal delay between play press & starttime
               start={sen.start + this.props.offset * 0.35}
               end={sen.end + this.props.offset * 0.35}
+              isRecording={this.props.isRecording}
+              isPlaying={this.props.isPlaying}
               key={`sentence-${sen.start}`}
             >
               {sen.transcript.map(
                 (word, i) =>
                   word.time ? (
                     <Keyword
+                      nowPlaying={this.state.keywordPlaying[word.time]}
+                      handleSelectionPlay={this.props.handleSelectionPlay}
                       start={word.time + this.props.offset}
                       end={sen.end}
-                      playing={this.state.keywordPlaying[word.time]}
-                      handleKeywordClick={this.props.handleKeywordClick}
+                      isRecording={this.props.isRecording}
                       word={word.word}
                       last={i === sen.transcript.length - 1}
                       key={`keyword-${word.time}`}

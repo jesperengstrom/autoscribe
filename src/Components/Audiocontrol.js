@@ -68,7 +68,7 @@ class Audiocontrol extends Component {
           <ProgressBar
             totalTime={this.props.duration || 0}
             currentTime={this.props.currentTime}
-            isSeekable={this.props.audioLoadSuccess}
+            isSeekable={this.props.audioLoadSuccess && !this.props.isRecording}
             onSeek={this.props.handleSeek}
             onSeekStart={time => this.setState(() => ({ lastSeekStart: time }))}
             onSeekEnd={time => this.setState(() => ({ lastSeekEnd: time }))}

@@ -103,6 +103,10 @@
 
 /* MISC */
 
+.display-none {
+  display: none !important;
+}
+
 .nowrap {
   white-space: nowrap;
 }
