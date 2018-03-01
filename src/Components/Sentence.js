@@ -1,24 +1,35 @@
 import React from 'react';
-import { Popup } from 'semantic-ui-react';
-
+import { Popup, Button } from 'semantic-ui-react';
 import './Sentence.css';
 
+const PopupContent = props => (
+  <div>
+    <Button
+      onClick={props.handleKeywordClick}
+      circular
+      icon="play"
+      className="sentence-play-btn"
+      data-start={props.start}
+      data-end={props.end}
+    />
+  </div>
+);
+
 const Sentence = props => {
+  // <-- call sentence, return popup containting PopupContent
   const sentencePlaying = props.playing ? 'sentence-playing' : '';
   const sentence = (
     <p className={`p-sentence ${sentencePlaying}`}>{props.children}</p>
   );
-  const popupContent = <span>Hi!</span>;
-
   return (
     <Popup
       trigger={sentence}
       position="left center"
       on="hover"
       horizontalOffset={5}
-      hoverable="false"
+      hoverable
     >
-      <Popup.Content>{popupContent}</Popup.Content>
+      <Popup.Content>{PopupContent(props)}</Popup.Content>
     </Popup>
   );
 };

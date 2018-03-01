@@ -14,3 +14,19 @@
   position: relative;
   top: 5px;
 }
+
+.sentence-play-btn {
+  border: 2px solid rgb(114, 214, 135) !important;
+  color: rgb(114, 214, 135) !important;
+  background: white !important;
+}
+
+.sentence-play-btn:hover {
+  border: 2px solid rgb(62, 164, 84) !important;
+  color: rgb(62, 164, 84) !important;
+  background: white !important;
+}
+
+.ui.popup {
+  padding: 0.5em 1em !important;
+}

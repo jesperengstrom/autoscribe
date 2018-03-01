@@ -141,7 +141,14 @@ class Transcribe extends Component {
       >
         <div id="transcribe-container">
           {this.state.transcripts.map(sen => (
-            <Sentence playing={this.state.sentencePlaying[sen.start].playing}>
+            <Sentence
+              playing={this.state.sentencePlaying[sen.start].playing}
+              handleKeywordClick={this.props.handleKeywordClick}
+              // offset * 35 seems to equal delay between play press & starttime
+              start={sen.start + this.props.offset * 0.35}
+              end={sen.end + this.props.offset * 0.35}
+              key={`sentence-${sen.start}`}
+            >
               {sen.transcript.map(
                 (word, i) =>
                   word.time ? (
@@ -152,11 +159,13 @@ class Transcribe extends Component {
                       handleKeywordClick={this.props.handleKeywordClick}
                       word={word.word}
                       last={i === sen.transcript.length - 1}
+                      key={`keyword-${word.time}`}
                     />
                   ) : (
                     <Word
                       last={i === sen.transcript.length - 1}
                       word={word.word}
+                      key={`word${i}`}
                     />
                   ),
               )}

@@ -32,8 +32,9 @@
   .SoundOffButton.isEnabled,
   /* no pointer when pending recording */
   .RecordButton.isEnabled:not(.pending) {
-    cursor: pointer; }
-    /* .PlayButton.isEnabled:hover, */
+    cursor: pointer;
+    transition: all 0.3s ease; }
+    .PlayButton.isEnabled:hover,
     /* .PauseButton.isEnabled:hover, */
     .PrevButton.isEnabled:hover,
     .NextButton.isEnabled:hover,
@@ -189,12 +190,11 @@
 
 
   /* CUSTOMIATIONS */
-  .PlayButton .Icon-shape, 
+  /* .PlayButton .Icon-shape, 
   .PauseButton .Icon-shape,
-  .RecordButton .Icon-shape, 
-  .RecordButton {
-    transition: all 0.3s ease;
-  }
+  .RecordButton .Icon-shape {
+    transition: all 0.1s ease;
+  } */
 
   /* blue prev & next buttons */
   .PrevButton, .NextButton {
@@ -216,8 +216,9 @@
 
   /* darker red when hover enabled recording button */
   .RecordButton.isEnabled:hover, 
-  .RecordButton.isEnabled:hover .Icon-shape {
+  .RecordButton.isEnabled:hover .Icon-shape  {
     fill: #b94c40;
+    border-color: #b94c40;
   }
 
   /* backlight when recording */

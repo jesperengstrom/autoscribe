@@ -113,14 +113,19 @@ class Main extends Component {
    * both 'play' icon and keywords
    */
   handleKeywordClick = e => {
-    const start = parseFloat(e.target.getAttribute('data-start'));
-    const end = parseFloat(e.target.getAttribute('data-end'));
-    this.handleSeek(start);
-    this.handlePlaybackChange(true);
-    // state check prevent from being more & more setIntervals
-    if (!this.state.stopOn) {
-      this.stopOn(end);
-    }
+    if (e.target.getAttribute('data-start')) {
+      const start = parseFloat(e.target.getAttribute('data-start'));
+      const end = parseFloat(e.target.getAttribute('data-end'));
+      this.handleSeek(start);
+      this.handlePlaybackChange(true);
+      // state check prevent from being more & more setIntervals
+      if (!this.state.stopOn) {
+        this.stopOn(end);
+      }
+    } else
+      console.log(
+        `handleKeywordclick got a ${e.target.getAttribute('data-start')}`,
+      );
   };
 
   stopOn = val => {
