@@ -218,6 +218,7 @@ class Main extends Component {
         />
         <Transcribe
           offset={this.props.settings.offset}
+          filename={this.props.audioFile.filename}
           currentTime={this.state.currentTime}
           transcript={this.state.transcript}
           isRecording={this.state.isRecording}

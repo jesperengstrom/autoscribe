@@ -184,9 +184,16 @@ class Transcribe extends Component {
           <div>
             {this.state.transcripts.length > 0 && (
               <button
-                onClick={() => handleExport(this.transcribeHTML.innerHTML)}
+                className="btn btn--sm btn--red mr-05"
+                onClick={() =>
+                  handleExport(
+                    this.transcribeHTML.innerHTML,
+                    this.props.filename,
+                  )
+                }
               >
-                Export as markdown
+                <i className="large download icon" />
+                Export markdown
               </button>
             )}
           </div>
