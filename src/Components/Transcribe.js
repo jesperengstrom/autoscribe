@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Loader } from 'semantic-ui-react';
 import Sentence from './Sentence';
 import { Word, Keyword } from './Words';
-// import SentencePlay from './SentencePlay';
+import handleExport from '../api/export';
+
 import './Transcribe.css';
 
 class Transcribe extends Component {
@@ -140,7 +141,12 @@ class Transcribe extends Component {
         className="flex justify-center align-center pt-1 "
       >
         <div />
-        <div id="transcribe-container">
+        <div
+          id="transcribe-container"
+          ref={html => {
+            this.transcribeHTML = html;
+          }}
+        >
           {this.state.transcripts.map(sen => (
             <Sentence
               playing={this.state.sentencePlaying[sen.start].playing}
@@ -176,7 +182,13 @@ class Transcribe extends Component {
         </div>
         <div id="editor-area-right" className="flex justify-end align-end">
           <div>
-            <button>Export as .md</button>
+            {this.state.transcripts.length > 0 && (
+              <button
+                onClick={() => handleExport(this.transcribeHTML.innerHTML)}
+              >
+                Export as markdown
+              </button>
+            )}
           </div>
         </div>
       </section>

@@ -5,15 +5,9 @@
 }
 
 #transcribe-container {
-  /* display: grid;
-  grid-template-columns: 100%; */
   background: white;
-  /* width: 55%; */
   min-height: 100%;
   padding: 6rem 6rem 1rem 6rem;
-  /* padding-right: 6%;
-  padding-left: 6%;
-  padding-top: 6rem; */
 }
 
 #transcribe-box {
