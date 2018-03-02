@@ -61,10 +61,12 @@ const Header = ({
         <ModalAudioUrl handleSelectFile={handleSelectFile} />
       </div>
       <div className="flex align-center">
-        <p className={`nowrap ml-1 ${loadStatus()}`}>
-          {audioFile.filename}
-          {audioError && <span className="ml-1">{audioError}</span>}
-        </p>
+        <div id="filename">
+          <p id="filename-p" className={`nowrap ml-1 ${loadStatus()}`}>
+            {audioFile.filename}
+            {audioError && <span className="ml-1">{audioError}</span>}
+          </p>
+        </div>
       </div>
       <div className="flex align-center justify-end">
         <p>

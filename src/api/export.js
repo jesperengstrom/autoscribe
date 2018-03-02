@@ -2,9 +2,9 @@ import Europa from 'europa';
 import FileSaver from 'file-saver';
 
 const handleExport = (data, fname) => {
-  const filename = fname.length > 20 ? `${fname.substring(0, 20)}...` : fname;
+  const filename = fname.length > 200 ? `${fname.substring(0, 200)}...` : fname;
   const date = new Date().toLocaleString();
-  const header = `<h1>Transcription of file ${filename}</h1><hr>`;
+  const header = `<h1>Transcription</h1><hr><h4>File: ${filename}</h4><hr>`;
   const footer = `<hr><p>Saved ${date}. This transcription was made using <a href="https://github.com/jesperengstrom/autoscribe">Autoscribe</a></p>`;
 
   const europa = new Europa();

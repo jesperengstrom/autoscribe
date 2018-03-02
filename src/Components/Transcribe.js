@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Loader } from 'semantic-ui-react';
 import Sentence from './Sentence';
 import { Word, Keyword } from './Words';
+import EditorMessage from './EditorMessage';
 import handleExport from '../api/export';
 
 import './Transcribe.css';
@@ -54,8 +55,8 @@ class Transcribe extends Component {
   };
 
   logSentences = () => {
-    // if no state or no such time prop present, set state
     if (
+      // if no state or no such time prop present, set state
       !this.state.sentencePlaying.hasOwnProperty(this.props.transcript.start)
     ) {
       const sTimes = Object.assign(this.state.sentencePlaying, {
@@ -135,12 +136,37 @@ class Transcribe extends Component {
         false
       );
 
+    const exportBtn = () => {
+      if (
+        // display export btn when transcript & no rec + play
+        this.state.transcripts.length > 0 &&
+        (this.props.isPlaying && this.props.isRecording) === false
+      ) {
+        return (
+          <button
+            className="btn btn--sm btn--red mr-05"
+            onClick={() =>
+              handleExport(this.transcribeHTML.innerHTML, this.props.filename)
+            }
+          >
+            <i className="large download icon" />
+            Export markdown
+          </button>
+        );
+      }
+      return false;
+    };
+
     return (
       <section
         id="transcribe-section"
         className="flex justify-center align-center pt-1 "
       >
-        <div />
+        <div id="editor-area-left">
+          {this.props.speechRecError && (
+            <EditorMessage type="speechRec" error={this.props.speechRecError} />
+          )}
+        </div>
         <div
           id="transcribe-container"
           ref={html => {
@@ -184,22 +210,7 @@ class Transcribe extends Component {
           {isRecording}
         </div>
         <div id="editor-area-right" className="flex justify-end align-end">
-          <div>
-            {this.state.transcripts.length > 0 && (
-              <button
-                className="btn btn--sm btn--red mr-05"
-                onClick={() =>
-                  handleExport(
-                    this.transcribeHTML.innerHTML,
-                    this.props.filename,
-                  )
-                }
-              >
-                <i className="large download icon" />
-                Export markdown
-              </button>
-            )}
-          </div>
+          <div>{exportBtn()}</div>
         </div>
       </section>
     );

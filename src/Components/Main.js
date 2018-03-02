@@ -12,6 +12,7 @@ class Main extends Component {
     isRecording: false,
     pendingRecording: false,
     isPlaying: false,
+    speechRecError: false,
     currentTime: 0,
     volume: 0.5,
     speed: 1,
@@ -26,7 +27,11 @@ class Main extends Component {
   onRecognitionChange = e => {
     if (e.type === 'start') {
       console.log('speech recognition started');
-      this.setState({ isRecording: true, pendingRecording: false });
+      this.setState({
+        isRecording: true,
+        pendingRecording: false,
+        speechRecError: false,
+      });
     }
     if (e.type === 'end') {
       console.log('speech recognition ended');
@@ -37,7 +42,7 @@ class Main extends Component {
       }
     }
     if (e.type === 'error') {
-      console.log(`A speech recognition error occurred: ${e.error}`);
+      this.setState({ speechRecError: e.error });
     }
   };
 
@@ -236,6 +241,7 @@ class Main extends Component {
           transcript={this.state.transcript}
           isRecording={this.state.isRecording}
           isPlaying={this.state.isPlaying}
+          speechRecError={this.state.speechRecError}
           handleSelectionPlay={this.handleSelectionPlay}
         />
       </main>
