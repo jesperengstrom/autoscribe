@@ -20,6 +20,7 @@ class Main extends Component {
     transcript: {},
     stopOn: false,
     stopOnEndRunning: false,
+    transcriptionEndTime: 0,
   };
 
   /**
@@ -54,6 +55,10 @@ class Main extends Component {
       this.rap.audioEl.currentTime,
       this.recognitionArrCallback,
     );
+  };
+
+  setTranscriptionEndTime = transcriptionEndTime => {
+    this.setState({ transcriptionEndTime });
   };
 
   recognitionArrCallback = obj => {
@@ -114,25 +119,6 @@ class Main extends Component {
   handleVolumeChange = volume => {
     this.setState({ volume });
   };
-
-  /**
-   * both 'play' icon and keywords
-   */
-  // handleKeywordClick = e => {
-  //   if (e.target.getAttribute('data-start')) {
-  //     const start = parseFloat(e.target.getAttribute('data-start'));
-  //     const end = parseFloat(e.target.getAttribute('data-end'));
-  //     this.handleSeek(start);
-  //     this.handlePlaybackChange(true);
-  //     // state check prevent from being more & more setIntervals
-  //     if (!this.state.stopOn) {
-  //       this.stopOn(end);
-  //     }
-  //   } else
-  //     console.log(
-  //       `handleKeywordclick got a ${e.target.getAttribute('data-start')}`,
-  //     );
-  // };
 
   handleSelectionPlay = (st, en) => {
     if (st) {
@@ -229,6 +215,7 @@ class Main extends Component {
           pendingRecording={this.state.pendingRecording}
           isPlaying={this.state.isPlaying}
           currentTime={this.state.currentTime}
+          transcriptionEndTime={this.state.transcriptionEndTime}
           volume={this.state.volume}
           speed={this.state.speed}
           lang={this.state.lang}
@@ -248,6 +235,7 @@ class Main extends Component {
           isPlaying={this.state.isPlaying}
           speechRecError={this.state.speechRecError}
           handleSelectionPlay={this.handleSelectionPlay}
+          setTranscriptionEndTime={this.setTranscriptionEndTime}
         />
       </main>
     );

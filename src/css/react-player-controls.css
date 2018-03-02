@@ -206,6 +206,16 @@
     fill: #7adaf0;
   }
 
+  .PrevButton.isEnabled:hover, 
+  .NextButton.isEnabled:hover {
+    border-color: #68b8ca;
+  }
+
+  .PrevButton.isEnabled:hover .Icon-shape, 
+  .NextButton.isEnabled:hover .Icon-shape {
+    fill: #68b8ca;
+  }
+
  /* red record button */
   .RecordButton {
     border: 2px solid #e65d4f;

@@ -30,18 +30,31 @@ class Audiocontrol extends Component {
             handleRecordChange={this.props.handleRecordChange}
           />
           <PlaybackControls
-            // play button disabled during pending recording
             isPlayable={
               this.props.audioLoadSuccess && !this.props.pendingRecording
             }
             isPlaying={this.props.isPlaying}
             showPrevious
-            hasPrevious={false}
+            hasPrevious={
+              this.props.audioLoadSuccess &&
+              !this.props.pendingRecording &&
+              (this.props.isPlaying || this.props.currentTime > 0) === true &&
+              (this.props.isPlaying && this.props.isRecording) === false
+            }
             showNext
-            hasNext={false}
+            hasNext={
+              this.props.audioLoadSuccess &&
+              !this.props.pendingRecording &&
+              this.props.transcriptionEndTime > 0 &&
+              (this.props.transcriptionEndTime !== this.props.currentTime ||
+                this.props.isPlaying) === true &&
+              (this.props.isPlaying && this.props.isRecording) === false
+            }
             onPlaybackChange={this.props.handlePlaybackChange}
-            onPrevious={() => alert('Go to previous')}
-            onNext={() => alert('Go to next')}
+            onPrevious={() => this.props.handleSeek(0)}
+            onNext={() =>
+              this.props.handleSeek(this.props.transcriptionEndTime)
+            }
           />
         </div>
         <div className="flex flex-column justify-center justify-evenly align-center">

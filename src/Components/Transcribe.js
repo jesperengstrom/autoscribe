@@ -50,12 +50,20 @@ class Transcribe extends Component {
     const addedSentences = this.logSentences();
     const newTranscripts = this.addAndSortTranscripts();
 
-    this.setState({
-      keywordPlaying: addedKeywords,
-      sentencePlaying: addedSentences,
-      transcripts: newTranscripts,
-      newTranscription: false,
-    });
+    this.setState(
+      {
+        keywordPlaying: addedKeywords,
+        sentencePlaying: addedSentences,
+        transcripts: newTranscripts,
+        newTranscription: false,
+      },
+      () => {
+        // call back to Main with last end time
+        this.props.setTranscriptionEndTime(
+          newTranscripts[newTranscripts.length - 1].end,
+        );
+      },
+    );
   };
 
   addAndSortTranscripts = () =>
