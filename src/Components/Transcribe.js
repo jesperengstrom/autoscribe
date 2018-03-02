@@ -58,10 +58,11 @@ class Transcribe extends Component {
         newTranscription: false,
       },
       () => {
-        // call back to Main with last end time
-        this.props.setTranscriptionEndTime(
-          newTranscripts[newTranscripts.length - 1].end,
-        );
+        // call back to Main with current bounds
+        this.props.setTranscriptSpan({
+          start: newTranscripts[0].start,
+          end: newTranscripts[newTranscripts.length - 1].end,
+        });
       },
     );
   };
@@ -211,7 +212,7 @@ class Transcribe extends Component {
                       nowPlaying={this.state.keywordPlaying[word.time]}
                       handleSelectionPlay={this.props.handleSelectionPlay}
                       start={word.time + this.props.offset}
-                      end={sen.end}
+                      end={sen.end + this.props.offset * 0.35}
                       isRecording={this.props.isRecording}
                       word={word.word}
                       last={i === sen.transcript.length - 1}

@@ -20,7 +20,7 @@ class Main extends Component {
     transcript: {},
     stopOn: false,
     stopOnEndRunning: false,
-    transcriptionEndTime: 0,
+    transcriptSpan: { start: 0, end: 0 },
   };
 
   /**
@@ -57,8 +57,8 @@ class Main extends Component {
     );
   };
 
-  setTranscriptionEndTime = transcriptionEndTime => {
-    this.setState({ transcriptionEndTime });
+  setTranscriptSpan = transcriptSpan => {
+    this.setState({ transcriptSpan });
   };
 
   recognitionArrCallback = obj => {
@@ -215,7 +215,7 @@ class Main extends Component {
           pendingRecording={this.state.pendingRecording}
           isPlaying={this.state.isPlaying}
           currentTime={this.state.currentTime}
-          transcriptionEndTime={this.state.transcriptionEndTime}
+          transcriptSpan={this.state.transcriptSpan}
           volume={this.state.volume}
           speed={this.state.speed}
           lang={this.state.lang}
@@ -235,7 +235,7 @@ class Main extends Component {
           isPlaying={this.state.isPlaying}
           speechRecError={this.state.speechRecError}
           handleSelectionPlay={this.handleSelectionPlay}
-          setTranscriptionEndTime={this.setTranscriptionEndTime}
+          setTranscriptSpan={this.setTranscriptSpan}
         />
       </main>
     );

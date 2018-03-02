@@ -38,23 +38,28 @@ class Audiocontrol extends Component {
             hasPrevious={
               this.props.audioLoadSuccess &&
               !this.props.pendingRecording &&
-              (this.props.isPlaying || this.props.currentTime > 0) === true &&
+              (this.props.isPlaying ||
+                this.props.currentTime > this.props.transcriptSpan.start) ===
+                true &&
               (this.props.isPlaying && this.props.isRecording) === false
             }
             showNext
             hasNext={
               this.props.audioLoadSuccess &&
               !this.props.pendingRecording &&
-              this.props.transcriptionEndTime > 0 &&
-              (this.props.transcriptionEndTime !== this.props.currentTime ||
-                this.props.isPlaying) === true &&
+              this.props.transcriptSpan.end > 0 &&
+              (this.props.isPlaying ||
+                this.props.currentTime !== this.props.transcriptSpan.end) ===
+                true &&
               (this.props.isPlaying && this.props.isRecording) === false
             }
             onPlaybackChange={this.props.handlePlaybackChange}
-            onPrevious={() => this.props.handleSeek(0)}
-            onNext={() =>
-              this.props.handleSeek(this.props.transcriptionEndTime)
+            onPrevious={() =>
+              this.props.handleSeek(
+                this.props.transcriptSpan.start + this.props.offset * 0.35,
+              )
             }
+            onNext={() => this.props.handleSeek(this.props.transcriptSpan.end)}
           />
         </div>
         <div className="flex flex-column justify-center justify-evenly align-center">
