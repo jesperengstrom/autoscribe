@@ -19,6 +19,7 @@ class Main extends Component {
     lang: 'sv',
     transcript: {},
     stopOn: false,
+    stopOnEndRunning: false,
   };
 
   /**
@@ -117,21 +118,21 @@ class Main extends Component {
   /**
    * both 'play' icon and keywords
    */
-  handleKeywordClick = e => {
-    if (e.target.getAttribute('data-start')) {
-      const start = parseFloat(e.target.getAttribute('data-start'));
-      const end = parseFloat(e.target.getAttribute('data-end'));
-      this.handleSeek(start);
-      this.handlePlaybackChange(true);
-      // state check prevent from being more & more setIntervals
-      if (!this.state.stopOn) {
-        this.stopOn(end);
-      }
-    } else
-      console.log(
-        `handleKeywordclick got a ${e.target.getAttribute('data-start')}`,
-      );
-  };
+  // handleKeywordClick = e => {
+  //   if (e.target.getAttribute('data-start')) {
+  //     const start = parseFloat(e.target.getAttribute('data-start'));
+  //     const end = parseFloat(e.target.getAttribute('data-end'));
+  //     this.handleSeek(start);
+  //     this.handlePlaybackChange(true);
+  //     // state check prevent from being more & more setIntervals
+  //     if (!this.state.stopOn) {
+  //       this.stopOn(end);
+  //     }
+  //   } else
+  //     console.log(
+  //       `handleKeywordclick got a ${e.target.getAttribute('data-start')}`,
+  //     );
+  // };
 
   handleSelectionPlay = (st, en) => {
     if (st) {
@@ -139,23 +140,27 @@ class Main extends Component {
       const end = parseFloat(en);
       this.handleSeek(start);
       this.handlePlaybackChange(true);
-      // state check prevent from being more & more setIntervals
-      if (!this.state.stopOn) {
-        this.stopOn(end);
-      }
+      this.setState({ stopOn: end }, () => {
+        // prevent more & more setIntervals running
+        if (!this.state.stopOnEndRunning) this.stopOnEnd();
+      });
     } else console.log(`handleSelectionPlay got a ${st}`);
   };
 
-  stopOn = val => {
-    this.setState({ stopOn: val });
-    const interval = setInterval(() => {
-      console.log('running interval!');
-      if (this.state.currentTime > val || !this.state.isPlaying) {
-        this.handlePlaybackChange(false);
-        clearInterval(interval);
-        this.setState({ stopOn: false });
-      }
-    }, 500);
+  stopOnEnd = () => {
+    this.setState({ stopOnEndRunning: true }, () => {
+      const interval = setInterval(() => {
+        console.log('running interval!');
+        if (
+          this.state.currentTime > this.state.stopOn ||
+          !this.state.isPlaying
+        ) {
+          this.handlePlaybackChange(false);
+          clearInterval(interval);
+          this.setState({ stopOn: false, stopOnEndRunning: false });
+        }
+      }, 500);
+    });
   };
 
   /**

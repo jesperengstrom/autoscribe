@@ -17,7 +17,7 @@ class Transcribe extends Component {
 
   componentWillReceiveProps(newProps) {
     if (newProps.transcript.start !== this.props.transcript.start) {
-      // <-- differs from current = new transcription incoming
+      // differs from current = new transcription
       this.setState({ newTranscription: true });
     }
     if (
@@ -25,7 +25,7 @@ class Transcribe extends Component {
       !newProps.isRecording &&
       this.state.keywordPlaying
     ) {
-      // playing audio with keywords logged... match for current keyword
+      // playing + keywords present -> look for matches
       this.keywordPlayingNow();
     }
 
@@ -33,7 +33,7 @@ class Transcribe extends Component {
       !newProps.isRecording &&
       Object.keys(this.state.sentencePlaying).length > 0
     ) {
-      // not recording with sentence logged... match current sentence.
+      // not recording + sentences present -> look for matches.
       this.sentencePlayingNow();
     }
   }
@@ -41,22 +41,39 @@ class Transcribe extends Component {
   componentWillUpdate() {
     if (this.state.newTranscription) {
       // we have a new unlogged transcripton here
-      this.logKeywords();
-      this.logSentences();
+      this.updateTranscriptStates();
     }
   }
+
+  updateTranscriptStates = () => {
+    const addedKeywords = this.logKeywords();
+    const addedSentences = this.logSentences();
+    const newTranscripts = this.addAndSortTranscripts();
+
+    this.setState({
+      keywordPlaying: addedKeywords,
+      sentencePlaying: addedSentences,
+      transcripts: newTranscripts,
+      newTranscription: false,
+    });
+  };
+
+  addAndSortTranscripts = () =>
+    [...this.state.transcripts, this.props.transcript].sort(
+      (a, b) => a.start - b.start,
+    );
 
   logKeywords = () => {
     const kTimes = { ...this.state.keywordPlaying };
     this.props.transcript.transcript.filter(el => el.time).forEach(el => {
       kTimes[el.time] = false;
     });
-    this.setState({ keywordPlaying: kTimes });
+    return kTimes;
   };
 
   logSentences = () => {
     if (
-      // if no state or no such time prop present, set state
+      // double check we have a new transcript
       !this.state.sentencePlaying.hasOwnProperty(this.props.transcript.start)
     ) {
       const sTimes = Object.assign(this.state.sentencePlaying, {
@@ -65,19 +82,16 @@ class Transcribe extends Component {
           end: this.props.transcript.end,
         },
       });
-      this.setState({
-        sentencePlaying: sTimes,
-        newTranscription: false,
-        transcripts: [...this.state.transcripts, this.props.transcript],
-      });
+      return sTimes;
     }
+    return this.state.sentencePlaying;
   };
 
   keywordPlayingNow = () => {
     const newState = Object.assign({}, this.state.keywordPlaying);
     Object.keys(this.state.keywordPlaying).forEach(el => {
-      // if a keyword's time is within (1 offset) sec from current audio time -> set state
       if (
+        // keyword's time is within (1 offset) sec from currentTime
         el > this.props.currentTime - this.props.offset &&
         el < this.props.currentTime - this.props.offset * 2
       ) {
@@ -89,10 +103,8 @@ class Transcribe extends Component {
     });
   };
 
-  /**
-   * turn focus off after 1 sec
-   */
   keywordNotPlayingNow = prop => {
+    // turn focus off after 1 sec
     setTimeout(() => {
       const newState = Object.assign(this.state.keywordPlaying, {
         [prop]: false,
@@ -104,20 +116,20 @@ class Transcribe extends Component {
   sentencePlayingNow = () => {
     const newState = Object.assign({}, this.state.sentencePlaying);
     Object.keys(newState).forEach(el => {
-      // if currentTime is within sentence time -> true
       if (
+        // currentTime + offset is within sentence time
         this.props.currentTime - this.props.offset > el &&
         this.props.currentTime - this.props.offset < newState[el].end
       ) {
         newState[el].playing = true;
-        // outside -> false
+        // outside sentence time
       } else if (
         this.props.currentTime - this.props.offset < el ||
         this.props.currentTime - this.props.offset > newState[el].end
       ) {
         newState[el].playing = false;
       }
-      // set state if it differs from current
+      // only set state if it differs from current
       return this.state.sentencePlaying[el].playing !== newState[el].playing
         ? this.setState({ sentencePlaying: newState })
         : false;
@@ -138,7 +150,7 @@ class Transcribe extends Component {
 
     const exportBtn = () => {
       if (
-        // display export btn when transcript & no rec + play
+        // exportBtn when transcript present & no rec + play
         this.state.transcripts.length > 0 &&
         (this.props.isPlaying && this.props.isRecording) === false
       ) {
