@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Words.css';
 
 export const Word = props => (
@@ -43,3 +44,18 @@ export const Keyword = props => {
 };
 
 export default { Word, Keyword };
+
+Keyword.propTypes = {
+  word: PropTypes.string.isRequired,
+  isRecording: PropTypes.bool.isRequired,
+  start: PropTypes.number.isRequired,
+  end: PropTypes.number.isRequired,
+  nowPlaying: PropTypes.bool.isRequired,
+  handleSelectionPlay: PropTypes.func.isRequired,
+  last: PropTypes.bool.isRequired,
+};
+
+Word.propTypes = {
+  word: PropTypes.string.isRequired,
+  last: PropTypes.bool.isRequired,
+};

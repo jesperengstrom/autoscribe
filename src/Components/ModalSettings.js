@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Header, Modal, Checkbox, Form } from 'semantic-ui-react';
 import '../css/pushy-buttons.css';
 
@@ -13,9 +14,7 @@ class ModalSettings extends Component {
   }
 
   handleOpen = () => this.setState({ modalOpen: true });
-
   handleClose = () => this.setState({ modalOpen: false });
-
   handleCheck = (e, { name, checked }) => {
     this.setState({
       settings: { ...this.state.settings, [name]: checked === true },
@@ -104,3 +103,7 @@ class ModalSettings extends Component {
   }
 }
 export default ModalSettings;
+
+ModalSettings.propTypes = {
+  handleSubmitSettings: PropTypes.func.isRequired,
+};

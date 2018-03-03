@@ -1,18 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ModalAudioUrl from './ModalAudioUrl';
 import ModalSettings from './ModalSettings';
 import '../css/pushy-buttons.css';
 import '../css/main.css';
 import './TopMenu.css';
 
-const TopMenu = ({
-  audioLoadSuccess,
-  audioError,
-  audioFile,
-  settings,
-  handleSelectFile,
-  handleSubmitSettings,
-}) => {
+const TopMenu = props => {
   const onChange = e => {
     // in case a file is selected, reslected and aborted
     if (!e.target.files[0]) {
@@ -25,12 +19,12 @@ const TopMenu = ({
       // set duration to 0 while evaluating file
       duration: 0,
     };
-    return handleSelectFile(sourceObj);
+    return props.handleSelectFile(sourceObj);
   };
 
   const loadStatus = () => {
-    if (audioLoadSuccess) return 'success';
-    if (audioError) return 'warning';
+    if (props.audioLoadSuccess) return 'success';
+    if (props.audioError) return 'warning';
     return '';
   };
 
@@ -58,21 +52,23 @@ const TopMenu = ({
           <i className="large file audio outline icon" />
           Choose file
         </label>
-        <ModalAudioUrl handleSelectFile={handleSelectFile} />
+        <ModalAudioUrl handleSelectFile={props.handleSelectFile} />
       </div>
       <div className="flex align-center">
         <div id="filename">
           <p id="filename-p" className={`nowrap ml-1 ${loadStatus()}`}>
-            {audioFile.filename}
-            {audioError && <span className="ml-1">{audioError}</span>}
+            {props.audioFile.filename}
+            {props.audioError && (
+              <span className="ml-1">{props.audioError}</span>
+            )}
           </p>
         </div>
       </div>
       <div className="flex align-center justify-end">
         <p>
           <ModalSettings
-            settings={settings}
-            handleSubmitSettings={handleSubmitSettings}
+            settings={props.settings}
+            handleSubmitSettings={props.handleSubmitSettings}
           />
         </p>
       </div>
@@ -92,3 +88,20 @@ const TopMenu = ({
 };
 
 export default TopMenu;
+
+TopMenu.propTypes = {
+  handleSelectFile: PropTypes.func.isRequired,
+  audioLoadSuccess: PropTypes.bool.isRequired,
+  audioError: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
+    .isRequired,
+  audioFile: PropTypes.shape({
+    filename: PropTypes.string.isRequired,
+    duration: PropTypes.number.isRequired,
+    path: PropTypes.string.isRequired,
+  }).isRequired,
+  settings: PropTypes.shape({
+    continuous: PropTypes.bool.isRequired,
+    offset: PropTypes.number.isRequired,
+  }).isRequired,
+  handleSubmitSettings: PropTypes.func.isRequired,
+};

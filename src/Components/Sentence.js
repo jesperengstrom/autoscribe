@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FormattedTime } from 'react-player-controls';
 import { Popup, Button } from 'semantic-ui-react';
 import './Sentence.css';
@@ -68,3 +69,32 @@ const Sentence = props => {
 };
 
 export default Sentence;
+
+Sentence.propTypes = {
+  timestamp: PropTypes.bool.isRequired,
+  isRecording: PropTypes.bool.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
+  start: PropTypes.number.isRequired,
+  children: PropTypes.element.isRequired,
+  nowPlaying: PropTypes.bool.isRequired,
+};
+
+Popup.propTypes = {
+  timestamp: PropTypes.bool.isRequired,
+  handleToggleTimestamp: PropTypes.func.isRequired,
+  offset: PropTypes.number.isRequired,
+  start: PropTypes.number.isRequired,
+  end: PropTypes.number.isRequired,
+  isRecording: PropTypes.bool.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
+  handleSelectionPlay: PropTypes.func.isRequired,
+};
+
+PopupContent.propTypes = {
+  timestamp: PropTypes.bool.isRequired,
+  handleToggleTimestamp: PropTypes.func.isRequired,
+  offset: PropTypes.number.isRequired,
+  start: PropTypes.number.isRequired,
+  end: PropTypes.number.isRequired,
+  handleSelectionPlay: PropTypes.func.isRequired,
+};

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ReactAudioPlayer from 'react-audio-player';
 import speechRec from '../api/speechRec';
 import utils from '../api/utils';
@@ -243,3 +244,18 @@ class Audiocontrol extends Component {
 }
 
 export default Audiocontrol;
+
+Audiocontrol.propTypes = {
+  audioLoadSuccess: PropTypes.bool.isRequired,
+  audioFile: PropTypes.shape({
+    filename: PropTypes.string.isRequired,
+    duration: PropTypes.number.isRequired,
+    path: PropTypes.string.isRequired,
+  }).isRequired,
+  settings: PropTypes.shape({
+    continuous: PropTypes.bool.isRequired,
+    offset: PropTypes.number.isRequired,
+  }).isRequired,
+  onLoadError: PropTypes.func.isRequired,
+  onLoadSuccess: PropTypes.func.isRequired,
+};

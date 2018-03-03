@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   PlaybackControls,
   ProgressBar,
@@ -15,9 +16,9 @@ import './Playback.css';
 
 class Playback extends Component {
   state = {
-    lastSeekStart: 0,
-    lastSeekEnd: 0,
-    lastIntent: 0,
+    // lastSeekStart: 0,
+    // lastSeekEnd: 0,
+    // lastIntent: 0,
   };
   render() {
     return (
@@ -115,3 +116,26 @@ class Playback extends Component {
   }
 }
 export default Playback;
+
+Playback.propTypes = {
+  audioLoadSuccess: PropTypes.bool.isRequired,
+  offset: PropTypes.number.isRequired,
+  isRecording: PropTypes.bool.isRequired,
+  pendingRecording: PropTypes.bool.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
+  currentTime: PropTypes.number.isRequired,
+  handleLangChange: PropTypes.func.isRequired,
+  handleRecordChange: PropTypes.func.isRequired,
+  handlePlaybackChange: PropTypes.func.isRequired,
+  handleSeek: PropTypes.func.isRequired,
+  handleVolumeChange: PropTypes.func.isRequired,
+  handleSpeedChange: PropTypes.func.isRequired,
+  volume: PropTypes.number.isRequired,
+  speed: PropTypes.number.isRequired,
+  transcriptSpan: PropTypes.shape({
+    start: PropTypes.number.isRequired,
+    end: PropTypes.number.isRequired,
+  }).isRequired,
+  lang: PropTypes.string.isRequired,
+  duration: PropTypes.number.isRequired,
+};

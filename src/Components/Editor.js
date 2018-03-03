@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Loader } from 'semantic-ui-react';
 import Sentence from './Sentence';
 import { Word, Keyword } from './Words';
@@ -82,7 +83,8 @@ class Editor extends Component {
   logSentences = () => {
     if (
       // double check we have a new transcript
-      !this.state.sentencePlaying.hasOwnProperty(
+      !Object.prototype.hasOwnProperty.call(
+        this.state.sentencePlaying,
         this.props.latestTranscript.start,
       )
     ) {
@@ -253,3 +255,20 @@ class Editor extends Component {
 }
 
 export default Editor;
+
+Editor.propTypes = {
+  offset: PropTypes.number.isRequired,
+  latestTranscript: PropTypes.shape({
+    start: PropTypes.number,
+    end: PropTypes.number,
+    transcript: PropTypes.arrayOf(PropTypes.object),
+  }).isRequired,
+  setTranscriptSpan: PropTypes.func.isRequired,
+  currentTime: PropTypes.number.isRequired,
+  isRecording: PropTypes.bool.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
+  filename: PropTypes.string.isRequired,
+  speechRecError: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
+    .isRequired,
+  handleSelectionPlay: PropTypes.func.isRequired,
+};

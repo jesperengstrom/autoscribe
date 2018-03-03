@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Recordbutton extends Component {
   state = {};
@@ -22,3 +23,11 @@ class Recordbutton extends Component {
 }
 
 export default Recordbutton;
+
+Recordbutton.propTypes = {
+  audioLoadSuccess: PropTypes.bool.isRequired,
+
+  isRecording: PropTypes.bool.isRequired,
+  pendingRecording: PropTypes.bool.isRequired,
+  handleRecordChange: PropTypes.func.isRequired,
+};

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Header, Modal } from 'semantic-ui-react';
 import '../css/pushy-buttons.css';
 
@@ -72,3 +73,7 @@ class ModalAudioUrl extends Component {
   }
 }
 export default ModalAudioUrl;
+
+ModalAudioUrl.propTypes = {
+  handleSelectFile: PropTypes.func.isRequired,
+};
