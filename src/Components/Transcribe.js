@@ -145,6 +145,16 @@ class Transcribe extends Component {
     });
   };
 
+  handleToggleTimestamp = start => {
+    const newTranscripts = this.state.transcripts.map(el => {
+      if (el.start === start) {
+        return { ...el, timestamp: true };
+      }
+      return el;
+    });
+    this.setState({ transcripts: newTranscripts });
+  };
+
   render() {
     const isRecording =
       this.props.isRecording && this.props.isPlaying ? (
@@ -198,11 +208,13 @@ class Transcribe extends Component {
             <Sentence
               nowPlaying={this.state.sentencePlaying[sen.start].playing}
               handleSelectionPlay={this.props.handleSelectionPlay}
-              // offset * 35 seems to equal delay between play press & starttime
-              start={sen.start + this.props.offset * 0.35}
-              end={sen.end + this.props.offset * 0.35}
+              handleToggleTimestamp={this.handleToggleTimestamp}
+              start={sen.start}
+              end={sen.end}
+              timestamp={sen.timestamp}
               isRecording={this.props.isRecording}
               isPlaying={this.props.isPlaying}
+              offset={this.props.offset}
               key={`sentence-${sen.start}`}
             >
               {sen.transcript.map(
@@ -211,8 +223,8 @@ class Transcribe extends Component {
                     <Keyword
                       nowPlaying={this.state.keywordPlaying[word.time]}
                       handleSelectionPlay={this.props.handleSelectionPlay}
-                      start={word.time + this.props.offset}
-                      end={sen.end + this.props.offset * 0.35}
+                      start={word.time}
+                      end={sen.end}
                       isRecording={this.props.isRecording}
                       word={word.word}
                       last={i === sen.transcript.length - 1}

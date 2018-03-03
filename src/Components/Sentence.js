@@ -1,19 +1,34 @@
 import React from 'react';
+import { FormattedTime } from 'react-player-controls';
 import { Popup, Button } from 'semantic-ui-react';
 import './Sentence.css';
 
 const PopupContent = props => {
-  const handleClick = () => {
-    props.handleSelectionPlay(props.start, props.end);
+  const handlePlayClick = () => {
+    // offset * 35 seems to equal delay between play press & starttime
+    props.handleSelectionPlay(
+      props.start + props.offset * 0.35,
+      props.end + props.offset * 0.35,
+    );
+  };
+
+  const handleTimestampClick = () => {
+    props.handleToggleTimestamp(props.start);
   };
 
   return (
     <div>
       <Button
-        onClick={handleClick}
+        onClick={handleTimestampClick}
+        circular
+        icon="hourglass start"
+        className="popup-btn add-timestamp-btn"
+      />
+      <Button
+        onClick={handlePlayClick}
         circular
         icon="play"
-        className="sentence-play-btn"
+        className="popup-btn sentence-play-btn"
       />
     </div>
   );
@@ -28,6 +43,11 @@ const Sentence = props => {
         props.isRecording && props.isPlaying ? 'tone-down' : ''
       }`}
     >
+      {props.timestamp && (
+        <span className="timestamp">
+          [<FormattedTime numSeconds={props.start} />]{` `}
+        </span>
+      )}
       {props.children}
     </p>
   );

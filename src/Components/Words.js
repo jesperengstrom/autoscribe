@@ -16,7 +16,11 @@ export const Keyword = props => {
 
   const handleClick = () => {
     // no keywordplay while recording
-    if (!props.isRecording) props.handleSelectionPlay(props.start, props.end);
+    if (!props.isRecording)
+      props.handleSelectionPlay(
+        props.start + this.props.offset,
+        props.end + this.props.offset * 0.35,
+      );
   };
 
   return (

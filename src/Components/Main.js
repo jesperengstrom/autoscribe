@@ -120,17 +120,17 @@ class Main extends Component {
     this.setState({ volume });
   };
 
-  handleSelectionPlay = (st, en) => {
-    if (st) {
-      const start = parseFloat(st);
-      const end = parseFloat(en);
+  handleSelectionPlay = (start, end) => {
+    if (start) {
+      // const start = parseFloat(st); // no need when not an attribute
+      // const end = parseFloat(en);
       this.handleSeek(start);
       this.handlePlaybackChange(true);
       this.setState({ stopOn: end }, () => {
         // prevent more & more setIntervals running
         if (!this.state.stopOnEndRunning) this.stopOnEnd();
       });
-    } else console.log(`handleSelectionPlay got a ${st}`);
+    } else console.log(`handleSelectionPlay got a ${start}`);
   };
 
   stopOnEnd = () => {

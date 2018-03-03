@@ -6,12 +6,16 @@
   color: black;
 }
 
-.sentence-playing {
-  background: rgba(255, 255, 0, 0.1)
+.timestamp {
+  color: rgb(123, 123, 123);
 }
 
-.tone-down {
-  color: rgb(151, 151, 151);
+.sentence-playing {
+  background: rgba(255, 255, 0, 0.1);
+}
+
+p.tone-down {
+  color: rgb(151, 151, 151) !important;
 }
 
 .sentence-play {
@@ -21,16 +25,30 @@
   top: 5px;
 }
 
-.sentence-play-btn {
-  border: 2px solid rgb(114, 214, 135) !important;
-  color: rgb(114, 214, 135) !important;
+.popup-btn {
+  border-style: solid !important;
+  border-width: 2px !important;
   background: white !important;
 }
 
+.sentence-play-btn {
+  border-color: rgb(114, 214, 135) !important;
+  color: rgb(114, 214, 135) !important;
+}
+
 .sentence-play-btn:hover {
-  border: 2px solid rgb(62, 164, 84) !important;
+  border-color: rgb(62, 164, 84) !important;
   color: rgb(62, 164, 84) !important;
-  background: white !important;
+}
+
+.add-timestamp-btn {
+  border-color: rgb(122, 218, 240) !important;
+  color: rgb(122, 218, 240) !important; 
+}
+
+.add-timestamp-btn:hover {
+  border-color: rgb(84, 132, 143) !important;
+  color: rgb(84, 132, 143) !important;
 }
 
 .ui.popup {
