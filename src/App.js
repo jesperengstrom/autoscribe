@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import Header from './Components/Header';
-import Main from './Components/Main';
+import TopMenu from './Components/TopMenu';
+import Audiocontrol from './Components/Audiocontrol';
 
 class App extends Component {
   state = {
@@ -59,12 +59,12 @@ class App extends Component {
   render() {
     return (
       <div id="app-container">
-        <Header
+        <TopMenu
           {...this.state}
           handleSelectFile={this.handleSelectFile}
           handleSubmitSettings={this.handleSubmitSettings}
         />
-        <Main
+        <Audiocontrol
           {...this.state}
           onLoadSuccess={this.onLoadSuccess}
           onLoadError={this.onLoadError}

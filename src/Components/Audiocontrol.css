@@ -1,5 +1,4 @@
-#audiocontrol-section {
-  background: #000000d1;
+#audiocontrol-container {
   display: grid;
-  grid-template-columns: 250px 45px 1fr 100px 40px
+  grid-template-rows: 75px 1fr;
 }

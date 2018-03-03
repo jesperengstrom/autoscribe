@@ -3,9 +3,9 @@ import ModalAudioUrl from './ModalAudioUrl';
 import ModalSettings from './ModalSettings';
 import '../css/pushy-buttons.css';
 import '../css/main.css';
-import './Header.css';
+import './TopMenu.css';
 
-const Header = ({
+const TopMenu = ({
   audioLoadSuccess,
   audioError,
   audioFile,
@@ -35,7 +35,7 @@ const Header = ({
   };
 
   return (
-    <section id="page-header" className="pr-1 pl-1">
+    <section id="top-menu" className="pr-1 pl-1">
       <header className="flex align-center">
         <h2>
           <i id="pen-logo" className="large write icon" />
@@ -91,4 +91,4 @@ const Header = ({
   );
 };
 
-export default Header;
+export default TopMenu;

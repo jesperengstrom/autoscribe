@@ -4,21 +4,20 @@ import Sentence from './Sentence';
 import { Word, Keyword } from './Words';
 import EditorMessage from './EditorMessage';
 import handleExport from '../api/export';
+import './Editor.css';
 
-import './Transcribe.css';
-
-class Transcribe extends Component {
+class Editor extends Component {
   state = {
-    newTranscription: false,
+    newTranscript: false,
     keywordPlaying: false,
     sentencePlaying: {},
     transcripts: [],
   };
 
   componentWillReceiveProps(newProps) {
-    if (newProps.transcript.start !== this.props.transcript.start) {
-      // differs from current = new transcription
-      this.setState({ newTranscription: true });
+    if (newProps.latestTranscript.start !== this.props.latestTranscript.start) {
+      // differs from current = new transcript
+      this.setState({ newTranscript: true });
     }
     if (
       newProps.isPlaying &&
@@ -39,7 +38,7 @@ class Transcribe extends Component {
   }
 
   componentWillUpdate() {
-    if (this.state.newTranscription) {
+    if (this.state.newTranscript) {
       // we have a new unlogged transcripton here
       this.updateTranscriptStates();
     }
@@ -55,10 +54,10 @@ class Transcribe extends Component {
         keywordPlaying: addedKeywords,
         sentencePlaying: addedSentences,
         transcripts: newTranscripts,
-        newTranscription: false,
+        newTranscript: false,
       },
       () => {
-        // call back to Main with current bounds
+        // call back to Audiocontrol with current bounds
         this.props.setTranscriptSpan({
           start: newTranscripts[0].start,
           end: newTranscripts[newTranscripts.length - 1].end,
@@ -68,13 +67,13 @@ class Transcribe extends Component {
   };
 
   addAndSortTranscripts = () =>
-    [...this.state.transcripts, this.props.transcript].sort(
+    [...this.state.transcripts, this.props.latestTranscript].sort(
       (a, b) => a.start - b.start,
     );
 
   logKeywords = () => {
     const kTimes = { ...this.state.keywordPlaying };
-    this.props.transcript.transcript.filter(el => el.time).forEach(el => {
+    this.props.latestTranscript.transcript.filter(el => el.time).forEach(el => {
       kTimes[el.time] = false;
     });
     return kTimes;
@@ -83,12 +82,14 @@ class Transcribe extends Component {
   logSentences = () => {
     if (
       // double check we have a new transcript
-      !this.state.sentencePlaying.hasOwnProperty(this.props.transcript.start)
+      !this.state.sentencePlaying.hasOwnProperty(
+        this.props.latestTranscript.start,
+      )
     ) {
       const sTimes = Object.assign(this.state.sentencePlaying, {
-        [this.props.transcript.start]: {
+        [this.props.latestTranscript.start]: {
           playing: false,
-          end: this.props.transcript.end,
+          end: this.props.latestTranscript.end,
         },
       });
       return sTimes;
@@ -191,7 +192,7 @@ class Transcribe extends Component {
 
     return (
       <section
-        id="transcribe-section"
+        id="editor-section"
         className="flex justify-center align-center pt-1 "
       >
         <div id="editor-area-left">
@@ -200,7 +201,7 @@ class Transcribe extends Component {
           )}
         </div>
         <div
-          id="transcribe-container"
+          id="editor-container"
           ref={html => {
             this.transcribeHTML = html;
           }}
@@ -251,4 +252,4 @@ class Transcribe extends Component {
   }
 }
 
-export default Transcribe;
+export default Editor;
