@@ -14,7 +14,7 @@
   background: rgba(255, 255, 0, 0.1);
 }
 
-p.tone-down {
+p.tone-down span {
   color: rgb(151, 151, 151) !important;
 }
 
@@ -46,6 +46,8 @@ p.tone-down {
   color: rgb(122, 218, 240) !important; 
 }
 
+
+.timestamp-present,
 .add-timestamp-btn:hover {
   border-color: rgb(84, 132, 143) !important;
   color: rgb(84, 132, 143) !important;

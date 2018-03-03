@@ -145,9 +145,10 @@ class Transcribe extends Component {
     });
   };
 
-  handleToggleTimestamp = start => {
+  handleToggleTimestamp = (present, start) => {
     const newTranscripts = this.state.transcripts.map(el => {
       if (el.start === start) {
+        if (present) return { ...el, timestamp: false };
         return { ...el, timestamp: true };
       }
       return el;

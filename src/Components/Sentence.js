@@ -13,7 +13,7 @@ const PopupContent = props => {
   };
 
   const handleTimestampClick = () => {
-    props.handleToggleTimestamp(props.start);
+    props.handleToggleTimestamp(props.timestamp, props.start);
   };
 
   return (
@@ -22,7 +22,9 @@ const PopupContent = props => {
         onClick={handleTimestampClick}
         circular
         icon="hourglass start"
-        className="popup-btn add-timestamp-btn"
+        className={`popup-btn add-timestamp-btn ${
+          props.timestamp ? 'timestamp-present' : ''
+        }`}
       />
       <Button
         onClick={handlePlayClick}
