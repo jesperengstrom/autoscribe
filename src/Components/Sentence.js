@@ -71,30 +71,39 @@ const Sentence = props => {
 export default Sentence;
 
 Sentence.propTypes = {
-  timestamp: PropTypes.bool.isRequired,
+  timestamp: PropTypes.bool,
   isRecording: PropTypes.bool.isRequired,
   isPlaying: PropTypes.bool.isRequired,
   start: PropTypes.number.isRequired,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.array])
+    .isRequired,
   nowPlaying: PropTypes.bool.isRequired,
 };
 
+Sentence.defaultProps = {
+  timestamp: false,
+};
+
 Popup.propTypes = {
-  timestamp: PropTypes.bool.isRequired,
-  handleToggleTimestamp: PropTypes.func.isRequired,
-  offset: PropTypes.number.isRequired,
-  start: PropTypes.number.isRequired,
-  end: PropTypes.number.isRequired,
-  isRecording: PropTypes.bool.isRequired,
-  isPlaying: PropTypes.bool.isRequired,
-  handleSelectionPlay: PropTypes.func.isRequired,
+  timestamp: PropTypes.bool,
+  handleToggleTimestamp: PropTypes.func,
+  offset: PropTypes.number,
+  start: PropTypes.number,
+  end: PropTypes.number,
+  isRecording: PropTypes.bool,
+  isPlaying: PropTypes.bool,
+  handleSelectionPlay: PropTypes.func,
 };
 
 PopupContent.propTypes = {
-  timestamp: PropTypes.bool.isRequired,
+  timestamp: PropTypes.bool,
   handleToggleTimestamp: PropTypes.func.isRequired,
   offset: PropTypes.number.isRequired,
   start: PropTypes.number.isRequired,
   end: PropTypes.number.isRequired,
   handleSelectionPlay: PropTypes.func.isRequired,
+};
+
+PopupContent.defaultProps = {
+  timestamp: false,
 };

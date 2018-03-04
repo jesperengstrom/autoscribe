@@ -232,6 +232,7 @@ class Editor extends Component {
                       isRecording={this.props.isRecording}
                       word={word.word}
                       last={i === sen.transcript.length - 1}
+                      offset={this.props.offset}
                       key={`keyword-${word.time}`}
                     />
                   ) : (

@@ -19,8 +19,8 @@ export const Keyword = props => {
     // no keywordplay while recording
     if (!props.isRecording)
       props.handleSelectionPlay(
-        props.start + this.props.offset,
-        props.end + this.props.offset * 0.35,
+        props.start + props.offset,
+        props.end + props.offset * 0.35,
       );
   };
 
@@ -53,6 +53,7 @@ Keyword.propTypes = {
   nowPlaying: PropTypes.bool.isRequired,
   handleSelectionPlay: PropTypes.func.isRequired,
   last: PropTypes.bool.isRequired,
+  offset: PropTypes.number.isRequired,
 };
 
 Word.propTypes = {
