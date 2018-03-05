@@ -29,6 +29,7 @@ p.tone-down span {
   border-style: solid !important;
   border-width: 2px !important;
   background: white !important;
+  margin-left: 0.2rem !important;
 }
 
 .sentence-play-btn {
@@ -41,16 +42,27 @@ p.tone-down span {
   color: rgb(62, 164, 84) !important;
 }
 
-.add-timestamp-btn {
+.sentence-timestamp-btn {
   border-color: rgb(122, 218, 240) !important;
   color: rgb(122, 218, 240) !important; 
 }
 
 
 .timestamp-present,
-.add-timestamp-btn:hover {
-  border-color: rgb(84, 132, 143) !important;
-  color: rgb(84, 132, 143) !important;
+.sentence-timestamp-btn:hover {
+  border-color: #68b8ca !important;
+  color: #68b8ca !important;
+}
+
+.sentence-delete-btn {
+  border-color: #e65d4f !important;
+  color: #e65d4f !important;
+}
+
+.sentence-delete-btn:hover {
+  border-color: #b94c40 !important;
+  color: #b94c40 !important;
+
 }
 
 .ui.popup {

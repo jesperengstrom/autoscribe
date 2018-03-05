@@ -159,6 +159,15 @@ class Editor extends Component {
     this.setState({ transcripts: newTranscripts });
   };
 
+  handleDeleteSentence = (index, start) => {
+    if (this.state.transcripts[index].start === start) {
+      // prevent deleting wrong index w same start time
+      const newArr = this.state.transcripts;
+      newArr.splice(index, 1);
+      this.setState({ transcripts: newArr });
+    }
+  };
+
   render() {
     const isRecording =
       this.props.isRecording && this.props.isPlaying ? (
@@ -208,7 +217,7 @@ class Editor extends Component {
             this.transcribeHTML = html;
           }}
         >
-          {this.state.transcripts.map(sen => (
+          {this.state.transcripts.map((sen, index) => (
             <Sentence
               nowPlaying={this.state.sentencePlaying[sen.start].playing}
               handleSelectionPlay={this.props.handleSelectionPlay}
@@ -219,6 +228,8 @@ class Editor extends Component {
               isRecording={this.props.isRecording}
               isPlaying={this.props.isPlaying}
               offset={this.props.offset}
+              handleDeleteSentence={this.handleDeleteSentence}
+              index={index}
               key={`sentence-${sen.start}`}
             >
               {sen.transcript.map(

@@ -17,13 +17,23 @@ const PopupContent = props => {
     props.handleToggleTimestamp(props.timestamp, props.start);
   };
 
+  const handleDeleteClick = () => {
+    props.handleDeleteSentence(props.index, props.start);
+  };
+
   return (
     <div>
+      <Button
+        onClick={handleDeleteClick}
+        circular
+        icon="delete"
+        className="popup-btn sentence-delete-btn"
+      />
       <Button
         onClick={handleTimestampClick}
         circular
         icon="hourglass start"
-        className={`popup-btn add-timestamp-btn ${
+        className={`popup-btn sentence-timestamp-btn ${
           props.timestamp ? 'timestamp-present' : ''
         }`}
       />
