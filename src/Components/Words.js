@@ -4,7 +4,16 @@ import './Words.css';
 
 export const Word = props => (
   <React.Fragment>
-    <span className="span-word" contentEditable suppressContentEditableWarning>
+    <span
+      className="span-word"
+      // listen for when user leaves element after change
+      onBlur={e => props.handleWordChange(e, props.index)}
+      role="textbox"
+      tabIndex={0}
+      data-id={props.wordId}
+      contentEditable
+      suppressContentEditableWarning
+    >
       {props.word}
       {props.last ? '.' : ''}
     </span>
@@ -29,8 +38,10 @@ export const Keyword = props => {
       <span
         className={`span-keyword ${keywordPlaying}`}
         onClick={handleClick}
+        onBlur={e => props.handleWordChange(e, props.index)}
+        onKeyDown
+        data-id={props.wordId}
         role="button"
-        onKeyPress={() => {}}
         tabIndex={0}
         contentEditable
         suppressContentEditableWarning

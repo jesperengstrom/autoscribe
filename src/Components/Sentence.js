@@ -112,6 +112,8 @@ PopupContent.propTypes = {
   start: PropTypes.number.isRequired,
   end: PropTypes.number.isRequired,
   handleSelectionPlay: PropTypes.func.isRequired,
+  handleDeleteSentence: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 PopupContent.defaultProps = {

@@ -159,10 +159,18 @@ class Editor extends Component {
     this.setState({ transcripts: newTranscripts });
   };
 
+  handleWordChange = (e, i) => {
+    // if data-id...
+    console.log(e.target);
+    const newArr = [...this.state.transcripts];
+    newArr[i.sen].transcript[i.word].word = e.target.textContent;
+    this.setState({ transcripts: newArr });
+  };
+
   handleDeleteSentence = (index, start) => {
     if (this.state.transcripts[index].start === start) {
       // prevent deleting wrong index w same start time
-      const newArr = this.state.transcripts;
+      const newArr = [...this.state.transcripts];
       newArr.splice(index, 1);
       this.setState({ transcripts: newArr });
     }
@@ -217,7 +225,7 @@ class Editor extends Component {
             this.transcribeHTML = html;
           }}
         >
-          {this.state.transcripts.map((sen, index) => (
+          {this.state.transcripts.map((sen, senIndex) => (
             <Sentence
               nowPlaying={this.state.sentencePlaying[sen.start].playing}
               handleSelectionPlay={this.props.handleSelectionPlay}
@@ -229,11 +237,11 @@ class Editor extends Component {
               isPlaying={this.props.isPlaying}
               offset={this.props.offset}
               handleDeleteSentence={this.handleDeleteSentence}
-              index={index}
+              index={senIndex}
               key={`sentence-${sen.start}`}
             >
               {sen.transcript.map(
-                (word, i) =>
+                (word, wordIndex) =>
                   word.time ? (
                     <Keyword
                       nowPlaying={this.state.keywordPlaying[word.time]}
@@ -242,15 +250,21 @@ class Editor extends Component {
                       end={sen.end}
                       isRecording={this.props.isRecording}
                       word={word.word}
-                      last={i === sen.transcript.length - 1}
+                      last={wordIndex === sen.transcript.length - 1}
                       offset={this.props.offset}
+                      index={{ word: wordIndex, sen: senIndex }}
+                      wordId={word.id}
+                      handleWordChange={this.handleWordChange}
                       key={`keyword-${word.time}`}
                     />
                   ) : (
                     <Word
-                      last={i === sen.transcript.length - 1}
+                      last={wordIndex === sen.transcript.length - 1}
                       word={word.word}
-                      key={`word${i}`}
+                      index={{ word: wordIndex, sen: senIndex }}
+                      wordId={word.id}
+                      handleWordChange={this.handleWordChange}
+                      key={`word${wordIndex}`}
                     />
                   ),
               )}
