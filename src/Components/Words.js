@@ -39,7 +39,7 @@ export const Keyword = props => {
         className={`span-keyword ${keywordPlaying}`}
         onClick={handleClick}
         onBlur={e => props.handleWordChange(e, props.index)}
-        onKeyDown
+        onKeyDown={() => true}
         data-id={props.wordId}
         role="button"
         tabIndex={0}

@@ -160,11 +160,18 @@ class Editor extends Component {
   };
 
   handleWordChange = (e, i) => {
-    // if data-id...
-    console.log(e.target);
-    const newArr = [...this.state.transcripts];
-    newArr[i.sen].transcript[i.word].word = e.target.textContent;
-    this.setState({ transcripts: newArr });
+    if (
+      // double check id to make sure we have the right element
+      // then only change state if word it's altered
+      e.target.getAttribute('data-id') ===
+        this.state.transcripts[i.sen].transcript[i.word].id &&
+      e.target.textContent !==
+        this.state.transcripts[i.sen].transcript[i.word].word
+    ) {
+      const newArr = [...this.state.transcripts];
+      newArr[i.sen].transcript[i.word].word = e.target.textContent;
+      this.setState({ transcripts: newArr });
+    }
   };
 
   handleDeleteSentence = (index, start) => {
