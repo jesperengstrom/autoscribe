@@ -62,6 +62,7 @@ const Sentence = props => {
         </span>
       )}
       {props.children}
+      .
     </p>
   );
   return (

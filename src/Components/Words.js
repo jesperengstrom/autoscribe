@@ -15,9 +15,9 @@ export const Word = props => (
       suppressContentEditableWarning
     >
       {props.word}
-      {props.last ? '.' : ''}
+      {/* {props.last ? '.' : ''} */}
     </span>
-    {` `}
+    {props.last ? `` : ` `}
   </React.Fragment>
 );
 
@@ -47,9 +47,9 @@ export const Keyword = props => {
         suppressContentEditableWarning
       >
         {props.word}
-        {props.last ? '.' : ''}
+        {/* {props.last ? '.' : ''} */}
       </span>
-      {` `}
+      {props.last ? `` : ` `}
     </React.Fragment>
   );
 };

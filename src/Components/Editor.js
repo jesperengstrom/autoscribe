@@ -15,6 +15,10 @@ class Editor extends Component {
     transcripts: [],
   };
 
+  componentDidMount() {
+    this.getFromLocalStorage();
+  }
+
   componentWillReceiveProps(newProps) {
     if (newProps.latestTranscript.start !== this.props.latestTranscript.start) {
       // differs from current = new transcript
@@ -45,6 +49,34 @@ class Editor extends Component {
     }
   }
 
+  getFromLocalStorage = () => {
+    if (
+      typeof localStorage !== 'undefined' &&
+      localStorage.getItem('savedEditor')
+    ) {
+      console.log('loaded saved transcript from localStorage!');
+      const savedEditor = JSON.parse(localStorage.getItem('savedEditor'));
+      this.setState({
+        transcripts: savedEditor.transcripts,
+        keywordPlaying: savedEditor.keywordPlaying,
+        sentencePlaying: savedEditor.sentencePlaying,
+      });
+    } else console.log('No found transcript in localStorage');
+  };
+
+  saveToLocalStorage = () => {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(
+        'savedEditor',
+        JSON.stringify({
+          transcripts: this.state.transcripts,
+          keywordPlaying: this.state.keywordPlaying,
+          sentencePlaying: this.state.sentencePlaying,
+        }),
+      );
+    }
+  };
+
   updateTranscriptStates = () => {
     const addedKeywords = this.logKeywords();
     const addedSentences = this.logSentences();
@@ -63,6 +95,7 @@ class Editor extends Component {
           start: newTranscripts[0].start,
           end: newTranscripts[newTranscripts.length - 1].end,
         });
+        this.saveToLocalStorage();
       },
     );
   };
@@ -156,7 +189,7 @@ class Editor extends Component {
       }
       return el;
     });
-    this.setState({ transcripts: newTranscripts });
+    this.setState({ transcripts: newTranscripts }, this.saveToLocalStorage);
   };
 
   handleWordChange = (e, i) => {
@@ -170,7 +203,7 @@ class Editor extends Component {
     ) {
       const newArr = [...this.state.transcripts];
       newArr[i.sen].transcript[i.word].word = e.target.textContent;
-      this.setState({ transcripts: newArr });
+      this.setState({ transcripts: newArr }, this.saveToLocalStorage);
     }
   };
 
@@ -179,7 +212,7 @@ class Editor extends Component {
       // prevent deleting wrong index w same start time
       const newArr = [...this.state.transcripts];
       newArr.splice(index, 1);
-      this.setState({ transcripts: newArr });
+      this.setState({ transcripts: newArr }, this.saveToLocalStorage);
     }
   };
 
