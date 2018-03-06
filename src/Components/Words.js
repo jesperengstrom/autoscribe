@@ -58,16 +58,22 @@ export default { Word, Keyword };
 
 Keyword.propTypes = {
   word: PropTypes.string.isRequired,
+  wordId: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
   isRecording: PropTypes.bool.isRequired,
   start: PropTypes.number.isRequired,
   end: PropTypes.number.isRequired,
   nowPlaying: PropTypes.bool.isRequired,
   handleSelectionPlay: PropTypes.func.isRequired,
+  handleWordChange: PropTypes.func.isRequired,
   last: PropTypes.bool.isRequired,
   offset: PropTypes.number.isRequired,
 };
 
 Word.propTypes = {
   word: PropTypes.string.isRequired,
+  wordId: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
   last: PropTypes.bool.isRequired,
+  handleWordChange: PropTypes.func.isRequired,
 };
