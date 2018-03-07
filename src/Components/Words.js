@@ -15,7 +15,6 @@ export const Word = props => (
       suppressContentEditableWarning
     >
       {props.word}
-      {/* {props.last ? '.' : ''} */}
     </span>
     {props.last ? `` : ` `}
   </React.Fragment>
@@ -47,7 +46,6 @@ export const Keyword = props => {
         suppressContentEditableWarning
       >
         {props.word}
-        {/* {props.last ? '.' : ''} */}
       </span>
       {props.last ? `` : ` `}
     </React.Fragment>
@@ -59,7 +57,10 @@ export default { Word, Keyword };
 Keyword.propTypes = {
   word: PropTypes.string.isRequired,
   wordId: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
+  index: PropTypes.shape({
+    sen: PropTypes.number.isRequired,
+    word: PropTypes.number.isRequired,
+  }).isRequired,
   isRecording: PropTypes.bool.isRequired,
   start: PropTypes.number.isRequired,
   end: PropTypes.number.isRequired,
@@ -73,7 +74,10 @@ Keyword.propTypes = {
 Word.propTypes = {
   word: PropTypes.string.isRequired,
   wordId: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
+  index: PropTypes.shape({
+    sen: PropTypes.number.isRequired,
+    word: PropTypes.number.isRequired,
+  }).isRequired,
   last: PropTypes.bool.isRequired,
   handleWordChange: PropTypes.func.isRequired,
 };

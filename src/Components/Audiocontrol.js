@@ -24,9 +24,6 @@ class Audiocontrol extends Component {
     transcriptSpan: { start: 0, end: 0 },
   };
 
-  /**
-   * Speech recognition onstart event
-   */
   onRecognitionChange = e => {
     if (e.type === 'start') {
       console.log('speech recognition started');
@@ -123,8 +120,6 @@ class Audiocontrol extends Component {
 
   handleSelectionPlay = (start, end) => {
     if (start) {
-      // const start = parseFloat(st); // no need when not an attribute
-      // const end = parseFloat(en);
       this.handleSeek(start);
       this.handlePlaybackChange(true);
       this.setState({ stopOn: end }, () => {
@@ -202,7 +197,6 @@ class Audiocontrol extends Component {
           listenInterval={1000}
           onListen={this.handleAudioProgressListen}
           volume={this.state.volume}
-          // playbackRate={this.state.speed}
           // need to add a ref to access the play() and pause() functions on the element
           ref={element => {
             this.rap = element;
