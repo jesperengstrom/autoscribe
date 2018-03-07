@@ -50,7 +50,7 @@ const TopMenu = props => {
           className="btn btn--sm btn--slim btn--red nowrap mr-05"
         >
           <i className="large file audio outline icon" />
-          Choose file
+          <span className="vanish-btn-text">Choose file</span>
         </label>
         <ModalAudioUrl handleSelectFile={props.handleSelectFile} />
       </div>

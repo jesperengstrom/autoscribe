@@ -242,7 +242,7 @@ class Editor extends Component {
             }
           >
             <i className="large download icon" />
-            Export markdown
+            <span className="vanish-btn-text">Export markdown</span>
           </button>
         );
       }
@@ -313,7 +313,7 @@ class Editor extends Component {
           {isRecording}
         </div>
         <div id="editor-area-right" className="flex justify-end align-end">
-          <div>{exportBtn()}</div>
+          <div id="export-btn">{exportBtn()}</div>
         </div>
       </section>
     );

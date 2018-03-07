@@ -30,7 +30,7 @@ class ModalAudioUrl extends Component {
             onClick={this.handleOpen}
           >
             <i className="large cloud download icon" />
-            Audio Url
+            <span className="vanish-btn-text">Audio Url</span>
           </button>
         }
         open={this.state.modalOpen}

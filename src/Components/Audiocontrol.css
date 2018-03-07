@@ -1,4 +1,5 @@
 #audiocontrol-container {
-  display: grid;
-  grid-template-rows: 75px 1fr;
+  /* display: grid;
+  grid-template-rows: 75px 1fr; */
+  height: 100%;
 }
