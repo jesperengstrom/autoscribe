@@ -31,6 +31,7 @@ const speechRec = (() => {
       'Sorry, Speech Recognition does not seem to work in your browser. Please try the lastest version of Chrome.',
     );
   }
+  return true;
 })();
 
 export default speechRec;
