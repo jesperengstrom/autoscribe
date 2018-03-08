@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: 1fr 2.3fr 1fr;
   padding-top: 125px;
-  height:100%;
+  min-height: 100%;
 }
 
 #editor-container {

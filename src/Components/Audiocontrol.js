@@ -76,7 +76,12 @@ class Audiocontrol extends Component {
     } else {
       this.rap.audioEl.pause();
     }
-    this.setState({ isPlaying: isPlaying === true });
+    this.setState({ isPlaying: isPlaying === true }, () => {
+      // pause also stops recording (if rec)
+      if (!this.state.isPlaying && this.state.isRecording) {
+        this.handleRecordChange();
+      }
+    });
   };
 
   /**

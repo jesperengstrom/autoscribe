@@ -55,14 +55,16 @@ const TopMenu = props => {
         <ModalAudioUrl handleSelectFile={props.handleSelectFile} />
       </div>
       <div className="flex align-center">
-        <div id="filename">
-          <p id="filename-p" className={`nowrap ml-1 ${loadStatus()}`}>
+        <p id="filename-p">
+          <span id="filename" className={`nowrap ml-1 ${loadStatus()}`}>
             {props.audioFile.filename}
-            {props.audioError && (
-              <span className="ml-1">{props.audioError}</span>
-            )}
-          </p>
-        </div>
+          </span>
+          {props.audioError && (
+            <span className={`nowrap ml-1 ${loadStatus()}`}>
+              {props.audioError}
+            </span>
+          )}
+        </p>
       </div>
       <div className="flex align-center justify-end">
         <p>
