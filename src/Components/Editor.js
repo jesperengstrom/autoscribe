@@ -204,7 +204,21 @@ class Editor extends Component {
       const newArr = [...this.state.transcripts];
       newArr[i.sen].transcript[i.word].word = e.target.textContent;
       this.setState({ transcripts: newArr }, this.saveToLocalStorage);
+    } else {
+      console.log('word data-id mismatch!');
     }
+  };
+
+  handleBackspace = e => {
+    if (
+      e.target.parentElement.firstElementChild === e.target &&
+      e.key === 'Backspace' &&
+      window.getSelection().anchorOffset === 0
+    ) {
+      // first word & keypress backspace & at word start
+      console.log('yes!');
+    }
+    return false;
   };
 
   handleDeleteSentence = (index, start) => {
@@ -304,6 +318,7 @@ class Editor extends Component {
                       index={{ word: wordIndex, sen: senIndex }}
                       wordId={word.id}
                       handleWordChange={this.handleWordChange}
+                      handleBackspace={this.handleBackspace}
                       key={`word${wordIndex}`}
                     />
                   ),

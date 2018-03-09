@@ -8,6 +8,7 @@ export const Word = props => (
       className="span-word"
       // listen for when user leaves element after change
       onBlur={e => props.handleWordChange(e, props.index)}
+      onKeyDown={props.handleBackspace}
       role="textbox"
       tabIndex={0}
       data-id={props.wordId}
@@ -31,7 +32,6 @@ export const Keyword = props => {
         props.end + props.offset * 0.35,
       );
   };
-
   return (
     <React.Fragment>
       <span
