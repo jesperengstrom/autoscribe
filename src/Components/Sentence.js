@@ -14,7 +14,7 @@ const PopupContent = props => {
   };
 
   const handleTimestampClick = () => {
-    props.handleToggleTimestamp(props.timestamp, props.start);
+    props.handleToggleTimestamp(props.hasTimestamp, props.start);
   };
 
   const handleDeleteClick = () => {
@@ -34,7 +34,7 @@ const PopupContent = props => {
         circular
         icon="hourglass start"
         className={`popup-btn sentence-timestamp-btn ${
-          props.timestamp ? 'timestamp-present' : ''
+          props.hasTimestamp ? 'timestamp-present' : ''
         }`}
       />
       <Button
@@ -56,7 +56,7 @@ const Sentence = props => {
         props.isRecording && props.isPlaying ? 'tone-down' : ''
       }`}
     >
-      {props.timestamp && (
+      {props.hasTimestamp && (
         <span className="timestamp">
           [<FormattedTime numSeconds={props.start} />]{` `}
         </span>
@@ -82,7 +82,7 @@ const Sentence = props => {
 export default Sentence;
 
 Sentence.propTypes = {
-  timestamp: PropTypes.bool,
+  hasTimestamp: PropTypes.bool.isRequired,
   isRecording: PropTypes.bool.isRequired,
   isPlaying: PropTypes.bool.isRequired,
   start: PropTypes.number.isRequired,
@@ -91,12 +91,8 @@ Sentence.propTypes = {
   nowPlaying: PropTypes.bool.isRequired,
 };
 
-Sentence.defaultProps = {
-  timestamp: false,
-};
-
 Popup.propTypes = {
-  timestamp: PropTypes.bool,
+  hasTimestamp: PropTypes.bool,
   handleToggleTimestamp: PropTypes.func,
   offset: PropTypes.number,
   start: PropTypes.number,
@@ -107,7 +103,7 @@ Popup.propTypes = {
 };
 
 PopupContent.propTypes = {
-  timestamp: PropTypes.bool,
+  hasTimestamp: PropTypes.bool.isRequired,
   handleToggleTimestamp: PropTypes.func.isRequired,
   offset: PropTypes.number.isRequired,
   start: PropTypes.number.isRequired,
@@ -115,8 +111,4 @@ PopupContent.propTypes = {
   handleSelectionPlay: PropTypes.func.isRequired,
   handleDeleteSentence: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
-};
-
-PopupContent.defaultProps = {
-  timestamp: false,
 };

@@ -10,9 +10,9 @@ import './Editor.css';
 class Editor extends Component {
   state = {
     newTranscript: false,
-    keywordPlaying: false,
-    sentencePlaying: {},
-    transcripts: [],
+    // keywordPlaying: false,
+    // sentencePlaying: {},
+    transcript: [],
   };
 
   componentDidMount() {
@@ -20,23 +20,20 @@ class Editor extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.latestTranscript.start !== this.props.latestTranscript.start) {
+    if (newProps.latestTranscript.senId !== this.props.latestTranscript.senId) {
       // differs from current = new transcript
       this.setState({ newTranscript: true });
     }
-    if (
-      newProps.isPlaying &&
-      !newProps.isRecording &&
-      this.state.keywordPlaying
-    ) {
-      // playing + keywords present -> look for matches
-      this.keywordPlayingNow();
-    }
+    // if (
+    //   newProps.isPlaying &&
+    //   !newProps.isRecording &&
+    //   this.state.keywordPlaying
+    // ) {
+    //   // playing + keywords present -> look for matches
+    //   this.keywordPlayingNow();
+    // }
 
-    if (
-      !newProps.isRecording &&
-      Object.keys(this.state.sentencePlaying).length > 0
-    ) {
+    if (!newProps.isRecording && this.state.transcript.length > 0) {
       // not recording + sentences present -> look for matches.
       this.sentencePlayingNow();
     }
@@ -57,9 +54,9 @@ class Editor extends Component {
       console.log('loaded saved transcript from localStorage!');
       const savedEditor = JSON.parse(localStorage.getItem('savedEditor'));
       this.setState({
-        transcripts: savedEditor.transcripts,
-        keywordPlaying: savedEditor.keywordPlaying,
-        sentencePlaying: savedEditor.sentencePlaying,
+        transcript: savedEditor.transcript,
+        // keywordPlaying: savedEditor.keywordPlaying,
+        // sentencePlaying: savedEditor.sentencePlaying,
       });
     } else console.log('No found transcript in localStorage');
   };
@@ -69,127 +66,126 @@ class Editor extends Component {
       localStorage.setItem(
         'savedEditor',
         JSON.stringify({
-          transcripts: this.state.transcripts,
-          keywordPlaying: this.state.keywordPlaying,
-          sentencePlaying: this.state.sentencePlaying,
+          transcript: this.state.transcript,
+          // keywordPlaying: this.state.keywordPlaying,
+          // sentencePlaying: this.state.sentencePlaying,
         }),
       );
     }
   };
 
   updateTranscriptStates = () => {
-    const addedKeywords = this.logKeywords();
-    const addedSentences = this.logSentences();
-    const newTranscripts = this.addAndSortTranscripts();
+    // const addedKeywords = this.logKeywords();
+    // const addedSentences = this.logSentences();
+    const newTranscript = this.addAndSortTranscript();
 
     this.setState(
       {
-        keywordPlaying: addedKeywords,
-        sentencePlaying: addedSentences,
-        transcripts: newTranscripts,
+        // keywordPlaying: addedKeywords,
+        // sentencePlaying: addedSentences,
+        transcript: newTranscript,
         newTranscript: false,
       },
       () => {
         // call back to Audiocontrol with current bounds
         this.props.setTranscriptSpan({
-          start: newTranscripts[0].start,
-          end: newTranscripts[newTranscripts.length - 1].end,
+          start: newTranscript[0].senStart,
+          end: newTranscript[newTranscript.length - 1].senEnd,
         });
         this.saveToLocalStorage();
       },
     );
   };
 
-  addAndSortTranscripts = () =>
-    [...this.state.transcripts, this.props.latestTranscript].sort(
-      (a, b) => a.start - b.start,
+  addAndSortTranscript = () =>
+    [...this.state.transcript, this.props.latestTranscript].sort(
+      (a, b) => a.senStart - b.senStart,
     );
 
-  logKeywords = () => {
-    const kTimes = { ...this.state.keywordPlaying };
-    this.props.latestTranscript.transcript.filter(el => el.time).forEach(el => {
-      kTimes[el.time] = false;
-    });
-    return kTimes;
-  };
+  // logKeywords = () => {
+  //   const kTimes = { ...this.state.keywordPlaying };
+  //   this.props.latestTranscript.transcript.filter(el => el.time).forEach(el => {
+  //     kTimes[el.time] = false;
+  //   });
+  //   return kTimes;
+  // };
 
-  logSentences = () => {
-    if (
-      // double check we have a new transcript
-      !Object.prototype.hasOwnProperty.call(
-        this.state.sentencePlaying,
-        this.props.latestTranscript.start,
-      )
-    ) {
-      const sTimes = Object.assign(this.state.sentencePlaying, {
-        [this.props.latestTranscript.start]: {
-          playing: false,
-          end: this.props.latestTranscript.end,
-        },
-      });
-      return sTimes;
-    }
-    return this.state.sentencePlaying;
-  };
+  // logSentences = () => {
+  //   if (
+  //     // double check we have a new transcript
+  //     !Object.prototype.hasOwnProperty.call(
+  //       this.state.sentencePlaying,
+  //       this.props.latestTranscript.start,
+  //     )
+  //   ) {
+  //     const sTimes = Object.assign(this.state.sentencePlaying, {
+  //       [this.props.latestTranscript.start]: {
+  //         playing: false,
+  //         end: this.props.latestTranscript.end,
+  //       },
+  //     });
+  //     return sTimes;
+  //   }
+  //   return this.state.sentencePlaying;
+  // };
 
-  keywordPlayingNow = () => {
-    const newState = Object.assign({}, this.state.keywordPlaying);
-    Object.keys(this.state.keywordPlaying).forEach(el => {
-      if (
-        // keyword's time is within (1 offset) sec from currentTime
-        el > this.props.currentTime - this.props.offset &&
-        el < this.props.currentTime - this.props.offset * 2
-      ) {
-        newState[el] = true;
-        this.setState({ keywordPlaying: newState }, () =>
-          this.keywordNotPlayingNow(el),
-        );
+  keywordPlayingNow = senIndex => {
+    const newState = [...this.state.transcript];
+    newState[senIndex].words.forEach((word, wordIndex) => {
+      if (word.wordStart) {
+        if (
+          // keyword's time is within (1 offset) sec from currentTime
+          word.wordStart > this.props.currentTime - this.props.offset &&
+          word.wordStart < this.props.currentTime - this.props.offset * 2
+        ) {
+          newState[senIndex].words[wordIndex].wordPlaying = true;
+          this.setState({ transcript: newState }, () => {
+            // de-highligt keyword 1 sec later
+            setTimeout(() => {
+              newState[senIndex].words[wordIndex].wordPlaying = false;
+              this.setState({ transcript: newState });
+            }, 1000);
+          });
+        }
       }
     });
-  };
-
-  keywordNotPlayingNow = prop => {
-    // turn focus off after 1 sec
-    setTimeout(() => {
-      const newState = Object.assign(this.state.keywordPlaying, {
-        [prop]: false,
-      });
-      this.setState({ keywordPlaying: newState });
-    }, 1000);
   };
 
   sentencePlayingNow = () => {
-    const newState = Object.assign({}, this.state.sentencePlaying);
-    Object.keys(newState).forEach(el => {
+    const newState = [...this.state.transcript];
+    newState.forEach((sen, senIndex) => {
       if (
+        this.props.currentTime - this.props.offset > sen.senStart &&
+        this.props.currentTime - this.props.offset < sen.senEnd
+      ) {
         // currentTime + offset is within sentence time
-        this.props.currentTime - this.props.offset > el &&
-        this.props.currentTime - this.props.offset < newState[el].end
-      ) {
-        newState[el].playing = true;
-        // outside sentence time
+        // check keywords within active sentence
+        this.keywordPlayingNow(senIndex);
+        newState[senIndex].senPlaying = true;
       } else if (
-        this.props.currentTime - this.props.offset < el ||
-        this.props.currentTime - this.props.offset > newState[el].end
+        this.props.currentTime - this.props.offset < sen.senStart ||
+        this.props.currentTime - this.props.offset > sen.senEnd
       ) {
-        newState[el].playing = false;
+        // outside sentence time
+        newState[senIndex].senPlaying = false;
       }
       // only set state if it differs from current
-      return this.state.sentencePlaying[el].playing !== newState[el].playing
-        ? this.setState({ sentencePlaying: newState })
+      return this.state.transcript[senIndex].senPlaying !==
+        newState[senIndex].senPlaying
+        ? this.setState({ transcript: newState })
         : false;
     });
   };
 
   handleToggleTimestamp = (present, start) => {
-    const newTranscripts = this.state.transcripts.map(el => {
-      if (el.start === start) {
-        if (present) return { ...el, timestamp: false };
-        return { ...el, timestamp: true };
+    const newTranscript = this.state.transcript.map(el => {
+      if (el.senStart === start) {
+        if (present) return { ...el, hasTimestamp: false };
+        return { ...el, hasTimestamp: true };
       }
       return el;
     });
-    this.setState({ transcripts: newTranscripts }, this.saveToLocalStorage);
+    this.setState({ transcript: newTranscript }, this.saveToLocalStorage);
   };
 
   handleWordChange = (e, i) => {
@@ -197,13 +193,12 @@ class Editor extends Component {
       // double check id to make sure we have the right element
       // then only change state if word it's altered
       e.target.getAttribute('data-id') ===
-        this.state.transcripts[i.sen].transcript[i.word].id &&
-      e.target.textContent !==
-        this.state.transcripts[i.sen].transcript[i.word].word
+        this.state.transcript[i.sen].words[i.word].wordId &&
+      e.target.textContent !== this.state.transcript[i.sen].words[i.word].word
     ) {
-      const newArr = [...this.state.transcripts];
-      newArr[i.sen].transcript[i.word].word = e.target.textContent;
-      this.setState({ transcripts: newArr }, this.saveToLocalStorage);
+      const newArr = [...this.state.transcript];
+      newArr[i.sen].words[i.word].word = e.target.textContent;
+      this.setState({ transcript: newArr }, this.saveToLocalStorage);
     } else {
       console.log('word data-id mismatch!');
     }
@@ -222,11 +217,11 @@ class Editor extends Component {
   };
 
   handleDeleteSentence = (index, start) => {
-    if (this.state.transcripts[index].start === start) {
+    if (this.state.transcript[index].senStart === start) {
       // prevent deleting wrong index w same start time
-      const newArr = [...this.state.transcripts];
+      const newArr = [...this.state.transcript];
       newArr.splice(index, 1);
-      this.setState({ transcripts: newArr }, this.saveToLocalStorage);
+      this.setState({ transcript: newArr }, this.saveToLocalStorage);
     }
   };
 
@@ -245,7 +240,7 @@ class Editor extends Component {
     const exportBtn = () => {
       if (
         // exportBtn when transcript present & no rec + play
-        this.state.transcripts.length > 0 &&
+        this.state.transcript.length > 0 &&
         (this.props.isPlaying && this.props.isRecording) === false
       ) {
         return (
@@ -279,44 +274,44 @@ class Editor extends Component {
             this.transcribeHTML = html;
           }}
         >
-          {this.state.transcripts.map((sen, senIndex) => (
+          {this.state.transcript.map((sen, senIndex) => (
             <Sentence
-              nowPlaying={this.state.sentencePlaying[sen.start].playing}
+              nowPlaying={sen.senPlaying}
               handleSelectionPlay={this.props.handleSelectionPlay}
               handleToggleTimestamp={this.handleToggleTimestamp}
-              start={sen.start}
-              end={sen.end}
-              timestamp={sen.timestamp}
+              start={sen.senStart}
+              end={sen.senEnd}
+              hasTimestamp={sen.hasTimestamp}
               isRecording={this.props.isRecording}
               isPlaying={this.props.isPlaying}
               offset={this.props.offset}
               handleDeleteSentence={this.handleDeleteSentence}
               index={senIndex}
-              key={`sentence-${sen.start}`}
+              key={`sentence-${sen.senStart}`}
             >
-              {sen.transcript.map(
+              {sen.words.map(
                 (word, wordIndex) =>
-                  word.time ? (
+                  word.wordStart ? (
                     <Keyword
-                      nowPlaying={this.state.keywordPlaying[word.time]}
+                      nowPlaying={word.wordPlaying}
                       handleSelectionPlay={this.props.handleSelectionPlay}
-                      start={word.time}
-                      end={sen.end}
+                      start={word.wordStart}
+                      end={sen.senEnd}
                       isRecording={this.props.isRecording}
                       word={word.word}
-                      last={wordIndex === sen.transcript.length - 1}
+                      last={wordIndex === sen.words.length - 1}
                       offset={this.props.offset}
                       index={{ word: wordIndex, sen: senIndex }}
-                      wordId={word.id}
+                      wordId={word.wordId}
                       handleWordChange={this.handleWordChange}
-                      key={`keyword-${word.time}`}
+                      key={`keyword-${word.wordStart}`}
                     />
                   ) : (
                     <Word
-                      last={wordIndex === sen.transcript.length - 1}
+                      last={wordIndex === sen.words.length - 1}
                       word={word.word}
                       index={{ word: wordIndex, sen: senIndex }}
-                      wordId={word.id}
+                      wordId={word.wordId}
                       handleWordChange={this.handleWordChange}
                       handleBackspace={this.handleBackspace}
                       key={`word${wordIndex}`}
@@ -340,6 +335,7 @@ export default Editor;
 Editor.propTypes = {
   offset: PropTypes.number.isRequired,
   latestTranscript: PropTypes.shape({
+    senId: PropTypes.string.isRequired,
     start: PropTypes.number,
     end: PropTypes.number,
     transcript: PropTypes.arrayOf(PropTypes.object),

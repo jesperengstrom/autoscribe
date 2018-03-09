@@ -16,8 +16,8 @@ const utils = (() => {
    * Example: "id-so7567s1pcpojemi"
    * @returns {string}
    */
-  const genreateId = () =>
-    `id-${Math.random()
+  const genreateId = prefix =>
+    `${prefix}-${Math.random()
       .toString(36)
       .substr(2, 16)}`;
 
@@ -35,11 +35,16 @@ const utils = (() => {
   const addKeywords = (final, keywrds) => {
     let k = keywrds;
     return final.map(el => {
-      const obj = { word: el, id: genreateId() };
+      const obj = {
+        word: el,
+        wordStart: false,
+        wordPlaying: false,
+        wordId: genreateId('id'),
+      };
       if (el.length > 5) {
         const i = k.findIndex(e => e.word.toLowerCase() === el.toLowerCase());
         if (i >= 0) {
-          obj.time = k[i].time;
+          obj.wordStart = k[i].time;
           // slice keyword arr so we don't find same word again
           k = k.slice(i + 1);
         }
@@ -85,7 +90,14 @@ const utils = (() => {
       // make arr of final string
       const fArr = res[0][0].transcript.split(' ');
       const finalArr = addKeywords(fArr, keywords);
-      const finalObj = { start: startTime, end: endTime, transcript: finalArr };
+      const finalObj = {
+        senId: genreateId('sen'),
+        senStart: startTime,
+        senEnd: endTime,
+        senPlaying: false,
+        words: finalArr,
+        hasTimestamp: false,
+      };
       resetVals();
       return callback(finalObj);
     }
