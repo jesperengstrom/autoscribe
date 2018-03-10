@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Loader } from 'semantic-ui-react';
 import Sentence from './Sentence';
-import { Word, Keyword } from './Words';
+import Word from './Word';
 import EditorMessage from './EditorMessage';
 import handleExport from '../api/export';
 import './Editor.css';
@@ -43,16 +43,10 @@ class Editor extends Component {
     ) {
       console.log('loaded saved transcript from localStorage!');
       const savedEditor = JSON.parse(localStorage.getItem('savedEditor'));
-      this.setState({ transcript: savedEditor.transcript }, () => {
-        if (this.state.transcript.length > 0) {
-          // call back and set transcript span
-          this.props.setTranscriptSpan({
-            start: savedEditor.transcript[0].senStart,
-            end:
-              savedEditor.transcript[savedEditor.transcript.length - 1].senEnd,
-          });
-        }
-      });
+      this.setState(
+        { transcript: savedEditor.transcript },
+        this.updateTranscriptSpan,
+      );
     } else console.log('No found transcript in localStorage');
   };
 
@@ -66,13 +60,9 @@ class Editor extends Component {
   };
 
   updateTranscriptStates = () => {
-    const newTranscript = this.addAndSortTranscript();
-    this.setState({ transcript: newTranscript, newTranscript: false }, () => {
-      // call back to Audiocontrol with transcript span
-      this.props.setTranscriptSpan({
-        start: newTranscript[0].senStart,
-        end: newTranscript[newTranscript.length - 1].senEnd,
-      });
+    const newState = this.addAndSortTranscript();
+    this.setState({ transcript: newState, newTranscript: false }, () => {
+      this.updateTranscriptSpan();
       this.saveToLocalStorage();
     });
   };
@@ -81,6 +71,20 @@ class Editor extends Component {
     [...this.state.transcript, this.props.latestTranscript].sort(
       (a, b) => a.senStart - b.senStart,
     );
+
+  updateTranscriptSpan() {
+    const updatedValue =
+      this.state.transcript.length > 0
+        ? {
+            start: this.state.transcript[0].senStart,
+            end: this.state.transcript[this.state.transcript.length - 1].senEnd,
+          }
+        : {
+            start: 0,
+            end: 0,
+          };
+    this.props.setTranscriptSpan(updatedValue);
+  }
 
   keywordPlayingNow = senIndex => {
     const newState = [...this.state.transcript];
@@ -192,7 +196,10 @@ class Editor extends Component {
       // prevent deleting wrong index w same start time
       const newState = [...this.state.transcript];
       newState.splice(index, 1);
-      this.setState({ transcript: newState }, this.saveToLocalStorage);
+      this.setState({ transcript: newState }, () => {
+        this.updateTranscriptSpan();
+        this.saveToLocalStorage();
+      });
     }
   };
 
@@ -260,36 +267,23 @@ class Editor extends Component {
               index={senIndex}
               key={`sentence-${sen.senStart}`}
             >
-              {sen.words.map(
-                (word, wordIndex) =>
-                  word.wordStart ? (
-                    <Keyword
-                      nowPlaying={word.wordPlaying}
-                      handleSelectionPlay={this.props.handleSelectionPlay}
-                      start={word.wordStart}
-                      end={sen.senEnd}
-                      isRecording={this.props.isRecording}
-                      word={word.word}
-                      last={wordIndex === sen.words.length - 1}
-                      offset={this.props.offset}
-                      index={{ word: wordIndex, sen: senIndex }}
-                      wordId={word.wordId}
-                      handleWordChange={this.handleWordChange}
-                      handleBackspace={this.handleBackspace}
-                      key={`keyword-${word.wordStart}`}
-                    />
-                  ) : (
-                    <Word
-                      last={wordIndex === sen.words.length - 1}
-                      word={word.word}
-                      index={{ word: wordIndex, sen: senIndex }}
-                      wordId={word.wordId}
-                      handleWordChange={this.handleWordChange}
-                      handleBackspace={this.handleBackspace}
-                      key={`word${wordIndex}`}
-                    />
-                  ),
-              )}
+              {sen.words.map((word, wordIndex) => (
+                <Word
+                  wordPlaying={word.wordPlaying}
+                  handleSelectionPlay={this.props.handleSelectionPlay}
+                  wordStart={word.wordStart}
+                  senEnd={sen.senEnd}
+                  isRecording={this.props.isRecording}
+                  word={word.word}
+                  last={wordIndex === sen.words.length - 1}
+                  offset={this.props.offset}
+                  index={{ word: wordIndex, sen: senIndex }}
+                  wordId={word.wordId}
+                  handleWordChange={this.handleWordChange}
+                  handleBackspace={this.handleBackspace}
+                  key={`word-${wordIndex}+${senIndex}`}
+                />
+              ))}
             </Sentence>
           ))}
           {isRecording}
