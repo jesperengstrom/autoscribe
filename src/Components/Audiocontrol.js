@@ -125,6 +125,7 @@ class Audiocontrol extends Component {
 
   handleSelectionPlay = (start, end) => {
     if (start) {
+      console.log(`playing from: ${start}`);
       this.handleSeek(start);
       this.handlePlaybackChange(true);
       this.setState({ stopOn: end }, () => {
@@ -137,7 +138,7 @@ class Audiocontrol extends Component {
   stopOnEnd = () => {
     this.setState({ stopOnEndIsRunning: true }, () => {
       const interval = setInterval(() => {
-        console.log('running interval!');
+        // console.log('running interval!');
         if (
           this.state.currentTime > this.state.stopOn ||
           !this.state.isPlaying

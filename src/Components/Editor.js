@@ -10,8 +10,6 @@ import './Editor.css';
 class Editor extends Component {
   state = {
     newTranscript: false,
-    // keywordPlaying: false,
-    // sentencePlaying: {},
     transcript: [],
   };
 
@@ -24,14 +22,6 @@ class Editor extends Component {
       // differs from current = new transcript
       this.setState({ newTranscript: true });
     }
-    // if (
-    //   newProps.isPlaying &&
-    //   !newProps.isRecording &&
-    //   this.state.keywordPlaying
-    // ) {
-    //   // playing + keywords present -> look for matches
-    //   this.keywordPlayingNow();
-    // }
 
     if (!newProps.isRecording && this.state.transcript.length > 0) {
       // not recording + sentences present -> look for matches.
@@ -53,10 +43,12 @@ class Editor extends Component {
     ) {
       console.log('loaded saved transcript from localStorage!');
       const savedEditor = JSON.parse(localStorage.getItem('savedEditor'));
-      this.setState({
-        transcript: savedEditor.transcript,
-        // keywordPlaying: savedEditor.keywordPlaying,
-        // sentencePlaying: savedEditor.sentencePlaying,
+      this.setState({ transcript: savedEditor.transcript }, () => {
+        // call back and set transcript span
+        this.props.setTranscriptSpan({
+          start: savedEditor.transcript[0].senStart,
+          end: savedEditor.transcript[savedEditor.transcript.length - 1].senEnd,
+        });
       });
     } else console.log('No found transcript in localStorage');
   };
@@ -65,69 +57,27 @@ class Editor extends Component {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(
         'savedEditor',
-        JSON.stringify({
-          transcript: this.state.transcript,
-          // keywordPlaying: this.state.keywordPlaying,
-          // sentencePlaying: this.state.sentencePlaying,
-        }),
+        JSON.stringify({ transcript: this.state.transcript }),
       );
     }
   };
 
   updateTranscriptStates = () => {
-    // const addedKeywords = this.logKeywords();
-    // const addedSentences = this.logSentences();
     const newTranscript = this.addAndSortTranscript();
-
-    this.setState(
-      {
-        // keywordPlaying: addedKeywords,
-        // sentencePlaying: addedSentences,
-        transcript: newTranscript,
-        newTranscript: false,
-      },
-      () => {
-        // call back to Audiocontrol with current bounds
-        this.props.setTranscriptSpan({
-          start: newTranscript[0].senStart,
-          end: newTranscript[newTranscript.length - 1].senEnd,
-        });
-        this.saveToLocalStorage();
-      },
-    );
+    this.setState({ transcript: newTranscript, newTranscript: false }, () => {
+      // call back to Audiocontrol with transcript span
+      this.props.setTranscriptSpan({
+        start: newTranscript[0].senStart,
+        end: newTranscript[newTranscript.length - 1].senEnd,
+      });
+      this.saveToLocalStorage();
+    });
   };
 
   addAndSortTranscript = () =>
     [...this.state.transcript, this.props.latestTranscript].sort(
       (a, b) => a.senStart - b.senStart,
     );
-
-  // logKeywords = () => {
-  //   const kTimes = { ...this.state.keywordPlaying };
-  //   this.props.latestTranscript.transcript.filter(el => el.time).forEach(el => {
-  //     kTimes[el.time] = false;
-  //   });
-  //   return kTimes;
-  // };
-
-  // logSentences = () => {
-  //   if (
-  //     // double check we have a new transcript
-  //     !Object.prototype.hasOwnProperty.call(
-  //       this.state.sentencePlaying,
-  //       this.props.latestTranscript.start,
-  //     )
-  //   ) {
-  //     const sTimes = Object.assign(this.state.sentencePlaying, {
-  //       [this.props.latestTranscript.start]: {
-  //         playing: false,
-  //         end: this.props.latestTranscript.end,
-  //       },
-  //     });
-  //     return sTimes;
-  //   }
-  //   return this.state.sentencePlaying;
-  // };
 
   keywordPlayingNow = senIndex => {
     const newState = [...this.state.transcript];
@@ -138,6 +88,12 @@ class Editor extends Component {
           word.wordStart > this.props.currentTime - this.props.offset &&
           word.wordStart < this.props.currentTime - this.props.offset * 2
         ) {
+          console.log(
+            `time:${this.props.currentTime} playing: ${
+              newState[senIndex].words[wordIndex].word
+            }`,
+          );
+
           newState[senIndex].words[wordIndex].wordPlaying = true;
           this.setState({ transcript: newState }, () => {
             // de-highligt keyword 1 sec later
@@ -199,8 +155,6 @@ class Editor extends Component {
       const newArr = [...this.state.transcript];
       newArr[i.sen].words[i.word].word = e.target.textContent;
       this.setState({ transcript: newArr }, this.saveToLocalStorage);
-    } else {
-      console.log('word data-id mismatch!');
     }
   };
 
@@ -335,7 +289,7 @@ export default Editor;
 Editor.propTypes = {
   offset: PropTypes.number.isRequired,
   latestTranscript: PropTypes.shape({
-    senId: PropTypes.string.isRequired,
+    senId: PropTypes.string,
     start: PropTypes.number,
     end: PropTypes.number,
     transcript: PropTypes.arrayOf(PropTypes.object),
