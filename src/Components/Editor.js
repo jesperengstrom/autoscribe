@@ -44,11 +44,14 @@ class Editor extends Component {
       console.log('loaded saved transcript from localStorage!');
       const savedEditor = JSON.parse(localStorage.getItem('savedEditor'));
       this.setState({ transcript: savedEditor.transcript }, () => {
-        // call back and set transcript span
-        this.props.setTranscriptSpan({
-          start: savedEditor.transcript[0].senStart,
-          end: savedEditor.transcript[savedEditor.transcript.length - 1].senEnd,
-        });
+        if (this.state.transcript.length > 0) {
+          // call back and set transcript span
+          this.props.setTranscriptSpan({
+            start: savedEditor.transcript[0].senStart,
+            end:
+              savedEditor.transcript[savedEditor.transcript.length - 1].senEnd,
+          });
+        }
       });
     } else console.log('No found transcript in localStorage');
   };
@@ -152,20 +155,34 @@ class Editor extends Component {
         this.state.transcript[i.sen].words[i.word].wordId &&
       e.target.textContent !== this.state.transcript[i.sen].words[i.word].word
     ) {
-      const newArr = [...this.state.transcript];
-      newArr[i.sen].words[i.word].word = e.target.textContent;
-      this.setState({ transcript: newArr }, this.saveToLocalStorage);
+      const newState = [...this.state.transcript];
+      if (!e.target.textContent) {
+        // empty -> remove
+        newState[i.sen].words.splice(i.word, 1);
+      } else {
+        newState[i.sen].words[i.word].word = e.target.textContent;
+      }
+      this.setState({ transcript: newState }, this.saveToLocalStorage);
     }
   };
 
-  handleBackspace = e => {
+  handleBackspace = (e, index) => {
     if (
-      e.target.parentElement.firstElementChild === e.target &&
+      e.target.getAttribute('data-first') &&
       e.key === 'Backspace' &&
       window.getSelection().anchorOffset === 0
     ) {
       // first word & keypress backspace & at word start
-      console.log('yes!');
+      if (index.sen !== 0) {
+        // sentence before to append to
+        const newState = [...this.state.transcript];
+        const newArr = newState[index.sen - 1];
+        const oldArr = newState[index.sen];
+        newArr.words = [...newArr.words, ...oldArr.words];
+        newArr.senEnd = oldArr.senEnd;
+        newState.splice(index.sen, 1);
+        this.setState({ transcript: newState }, this.saveToLocalStorage);
+      }
     }
     return false;
   };
@@ -173,9 +190,9 @@ class Editor extends Component {
   handleDeleteSentence = (index, start) => {
     if (this.state.transcript[index].senStart === start) {
       // prevent deleting wrong index w same start time
-      const newArr = [...this.state.transcript];
-      newArr.splice(index, 1);
-      this.setState({ transcript: newArr }, this.saveToLocalStorage);
+      const newState = [...this.state.transcript];
+      newState.splice(index, 1);
+      this.setState({ transcript: newState }, this.saveToLocalStorage);
     }
   };
 
@@ -258,6 +275,7 @@ class Editor extends Component {
                       index={{ word: wordIndex, sen: senIndex }}
                       wordId={word.wordId}
                       handleWordChange={this.handleWordChange}
+                      handleBackspace={this.handleBackspace}
                       key={`keyword-${word.wordStart}`}
                     />
                   ) : (

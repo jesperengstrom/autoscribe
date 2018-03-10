@@ -8,10 +8,11 @@ export const Word = props => (
       className="span-word"
       // listen for when user leaves element after change
       onBlur={e => props.handleWordChange(e, props.index)}
-      onKeyDown={props.handleBackspace}
+      onKeyDown={e => props.handleBackspace(e, props.index)}
       role="textbox"
       tabIndex={0}
       data-id={props.wordId}
+      data-first={props.index.word === 0}
       contentEditable
       suppressContentEditableWarning
     >
@@ -38,8 +39,9 @@ export const Keyword = props => {
         className={`span-keyword ${keywordPlaying}`}
         onClick={handleClick}
         onBlur={e => props.handleWordChange(e, props.index)}
-        onKeyDown={() => true}
+        onKeyDown={e => props.handleBackspace(e, props.index)}
         data-id={props.wordId}
+        data-first={props.index.word === 0}
         role="button"
         tabIndex={0}
         contentEditable
@@ -67,6 +69,7 @@ Keyword.propTypes = {
   nowPlaying: PropTypes.bool.isRequired,
   handleSelectionPlay: PropTypes.func.isRequired,
   handleWordChange: PropTypes.func.isRequired,
+  handleBackspace: PropTypes.func.isRequired,
   last: PropTypes.bool.isRequired,
   offset: PropTypes.number.isRequired,
 };
@@ -80,4 +83,5 @@ Word.propTypes = {
   }).isRequired,
   last: PropTypes.bool.isRequired,
   handleWordChange: PropTypes.func.isRequired,
+  handleBackspace: PropTypes.func.isRequired,
 };
