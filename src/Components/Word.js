@@ -30,7 +30,7 @@ const Word = props => {
         onClick={props.wordStart ? handleClick : () => true}
         onBlur={e => props.handleWordChange(e, props.index)}
         onFocus={handleFocus}
-        onKeyDown={e => props.handleBackspace(e, props.index)}
+        onKeyDown={e => props.handleKeyDown(e, props.index)}
         data-id={props.wordId}
         data-first={props.index.word === 0}
         role="button"
@@ -60,7 +60,7 @@ Word.propTypes = {
   wordPlaying: PropTypes.bool.isRequired,
   handleSelectionPlay: PropTypes.func.isRequired,
   handleWordChange: PropTypes.func.isRequired,
-  handleBackspace: PropTypes.func.isRequired,
+  handleKeyDown: PropTypes.func.isRequired,
   last: PropTypes.bool.isRequired,
   offset: PropTypes.number.isRequired,
 };

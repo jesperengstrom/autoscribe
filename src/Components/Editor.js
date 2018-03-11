@@ -122,8 +122,11 @@ class Editor extends Component {
         this.props.currentTime - this.props.offset < sen.senEnd
       ) {
         // currentTime + offset is within sentence time
-        // check keywords within active sentence
-        this.keywordPlayingNow(senIndex);
+        // check keywords within active sentence, only of not playing
+        if (this.props.isPlaying) {
+          this.keywordPlayingNow(senIndex);
+        }
+
         newState[senIndex].senPlaying = true;
       } else if (
         this.props.currentTime - this.props.offset < sen.senStart ||
@@ -171,25 +174,39 @@ class Editor extends Component {
   };
 
   // ctrl + backspace merges sentences
-  handleBackspace = (e, index) => {
+  handleKeyDown = (e, index) => {
     if (
       e.target.getAttribute('data-first') &&
       e.key === 'Backspace' &&
+      window.getSelection().anchorOffset === 0 &&
+      e.ctrlKey &&
+      index.sen !== 0 // sentence before to append to
+    ) {
+      return this.mergeSentences(index);
+    }
+    if (
+      e.key === 'Enter' &&
       e.ctrlKey &&
       window.getSelection().anchorOffset === 0
     ) {
-      if (index.sen !== 0) {
-        // sentence before to append to
-        const newState = [...this.state.transcript];
-        const newArr = newState[index.sen - 1];
-        const oldArr = newState[index.sen];
-        newArr.words = [...newArr.words, ...oldArr.words];
-        newArr.senEnd = oldArr.senEnd;
-        newState.splice(index.sen, 1);
-        this.setState({ transcript: newState }, this.saveToLocalStorage);
-      }
+      // if (e.target.classList.contains('span-keyword'))
+      console.log(
+        e.target.classList.contains('span-keyword')
+          ? 'break at keyword'
+          : 'break at reg word',
+      );
     }
     return false;
+  };
+
+  mergeSentences = index => {
+    const newState = [...this.state.transcript];
+    const newArr = newState[index.sen - 1];
+    const oldArr = newState[index.sen];
+    newArr.words = [...newArr.words, ...oldArr.words];
+    newArr.senEnd = oldArr.senEnd;
+    newState.splice(index.sen, 1);
+    this.setState({ transcript: newState }, this.saveToLocalStorage);
   };
 
   handleDeleteSentence = (index, start) => {
@@ -281,7 +298,7 @@ class Editor extends Component {
                   index={{ word: wordIndex, sen: senIndex }}
                   wordId={word.wordId}
                   handleWordChange={this.handleWordChange}
-                  handleBackspace={this.handleBackspace}
+                  handleKeyDown={this.handleKeyDown}
                   key={`word-${wordIndex}+${senIndex}`}
                 />
               ))}
