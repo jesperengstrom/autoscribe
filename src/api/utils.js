@@ -90,6 +90,7 @@ const utils = (() => {
       // make arr of final string
       const fArr = res[0][0].transcript.split(' ');
       const finalArr = addKeywords(fArr, keywords);
+      finalArr[finalArr.length - 1].word += '.';
       const finalObj = {
         senId: genreateId('sen'),
         senStart: startTime,

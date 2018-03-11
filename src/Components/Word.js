@@ -12,6 +12,15 @@ const Word = props => {
         props.senEnd + props.offset * 0.35,
       );
   };
+  // select word on focus
+  const handleFocus = e => {
+    const range = document.createRange();
+    range.selectNodeContents(e.target);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  };
+
   return (
     <React.Fragment>
       <span
@@ -20,6 +29,7 @@ const Word = props => {
         }
         onClick={props.wordStart ? handleClick : () => true}
         onBlur={e => props.handleWordChange(e, props.index)}
+        onFocus={handleFocus}
         onKeyDown={e => props.handleBackspace(e, props.index)}
         data-id={props.wordId}
         data-first={props.index.word === 0}

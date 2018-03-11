@@ -170,13 +170,14 @@ class Editor extends Component {
     }
   };
 
+  // ctrl + backspace merges sentences
   handleBackspace = (e, index) => {
     if (
       e.target.getAttribute('data-first') &&
       e.key === 'Backspace' &&
+      e.ctrlKey &&
       window.getSelection().anchorOffset === 0
     ) {
-      // first word & keypress backspace & at word start
       if (index.sen !== 0) {
         // sentence before to append to
         const newState = [...this.state.transcript];
