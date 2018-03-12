@@ -155,6 +155,7 @@ class Editor extends Component {
   };
 
   handleWordChange = (e, i) => {
+    console.log(e.target);
     if (
       // double check id to make sure we have the right element
       // then only change state if word it's altered
@@ -185,18 +186,49 @@ class Editor extends Component {
       return this.mergeSentences(index);
     }
     if (
+      e.target.getAttribute('data-first') === 'false' && // can't leave an empty sentencec
       e.key === 'Enter' &&
       e.ctrlKey &&
       window.getSelection().anchorOffset === 0
     ) {
-      // if (e.target.classList.contains('span-keyword'))
-      console.log(
-        e.target.classList.contains('span-keyword')
-          ? 'break at keyword'
-          : 'break at reg word',
-      );
+      return e.target.classList.contains('span-keyword')
+        ? // split sentence using keyword timestamp or shared
+          this.splitSentences(true, index)
+        : this.splitSentences(false, index);
     }
     return false;
+  };
+
+  splitSentences = (isKeyword, index) => {
+    const sourceSen = { ...this.state.transcript[index.sen] };
+    const newSen = { ...this.state.transcript[index.sen] };
+    sourceSen.words = this.state.transcript[index.sen].words.slice(
+      0,
+      index.word,
+    );
+    newSen.words = this.state.transcript[index.sen].words.slice(index.word);
+    if (isKeyword) {
+      // keyword time -> source end & new sen start
+      sourceSen.senEnd = this.state.transcript[index.sen].words[
+        index.word
+      ].wordStart;
+      newSen.senStart = this.state.transcript[index.sen].words[
+        index.word
+      ].wordStart;
+      newSen.isSplit = false;
+    } else newSen.isSplit = true;
+
+    newSen.senStart += 0.01; // add 10 ms for sorting purposes
+
+    this.state.transcript.splice(index.sen, 1); // alter state directly, bad!
+    this.setState(
+      {
+        transcript: [...this.state.transcript, sourceSen, newSen].sort(
+          (a, b) => a.senStart - b.senStart,
+        ),
+      },
+      this.saveToLocalStorage,
+    );
   };
 
   mergeSentences = index => {
@@ -278,12 +310,13 @@ class Editor extends Component {
               start={sen.senStart}
               end={sen.senEnd}
               hasTimestamp={sen.hasTimestamp}
+              isSplit={sen.isSplit ? sen.isSplit : false}
               isRecording={this.props.isRecording}
               isPlaying={this.props.isPlaying}
               offset={this.props.offset}
               handleDeleteSentence={this.handleDeleteSentence}
               index={senIndex}
-              key={`sentence-${sen.senStart}`}
+              key={`${sen.senId}-${senIndex}`}
             >
               {sen.words.map((word, wordIndex) => (
                 <Word
@@ -299,7 +332,7 @@ class Editor extends Component {
                   wordId={word.wordId}
                   handleWordChange={this.handleWordChange}
                   handleKeyDown={this.handleKeyDown}
-                  key={`word-${wordIndex}+${senIndex}`}
+                  key={`${word.wordId}-${wordIndex}`}
                 />
               ))}
             </Sentence>

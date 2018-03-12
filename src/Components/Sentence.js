@@ -29,14 +29,16 @@ const PopupContent = props => {
         icon="delete"
         className="popup-btn sentence-delete-btn"
       />
-      <Button
-        onClick={handleTimestampClick}
-        circular
-        icon="hourglass start"
-        className={`popup-btn sentence-timestamp-btn ${
-          props.hasTimestamp ? 'timestamp-present' : ''
-        }`}
-      />
+      {!props.isSplit && (
+        <Button
+          onClick={handleTimestampClick}
+          circular
+          icon="hourglass start"
+          className={`popup-btn sentence-timestamp-btn ${
+            props.hasTimestamp ? 'timestamp-present' : ''
+          }`}
+        />
+      )}
       <Button
         onClick={handlePlayClick}
         circular
@@ -56,11 +58,12 @@ const Sentence = props => {
         props.isRecording && props.isPlaying ? 'tone-down' : ''
       }`}
     >
-      {props.hasTimestamp && (
-        <span className="timestamp">
-          [<FormattedTime numSeconds={props.start} />]{` `}
-        </span>
-      )}
+      {props.hasTimestamp &&
+        !props.isSplit && (
+          <span className="timestamp">
+            [<FormattedTime numSeconds={props.start} />]{` `}
+          </span>
+        )}
       {props.children}
     </p>
   );
