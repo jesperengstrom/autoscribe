@@ -22,10 +22,10 @@
 #filename {
   max-width: 400px;
   overflow: hidden;
-  position:relative
+  /* position:relative */
 }
 
-#filename:before {
+/* #filename:before {
   content:'';
   width:100%;
   height:100%;    
@@ -33,7 +33,7 @@
   left:0;
   top:0;
   background:linear-gradient(to right, transparent 85%, #e3e3e3 100%)
-}
+} */
 
 @media screen and (max-width: 1190px) {
   #top-menu {
