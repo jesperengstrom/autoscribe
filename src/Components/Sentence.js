@@ -39,19 +39,22 @@ const PopupContent = props => {
           }`}
         />
       )}
-      <Button
-        onClick={handlePlayClick}
-        circular
-        icon="play"
-        className="popup-btn sentence-play-btn"
-      />
+      {props.audioLoadSuccess && (
+        <Button
+          onClick={handlePlayClick}
+          circular
+          icon="play"
+          className="popup-btn sentence-play-btn"
+        />
+      )}
     </div>
   );
 };
 
 const Sentence = props => {
   // <-- call sentence, but return popup containting PopupContent triggered by Sentence
-  const sentencePlaying = props.nowPlaying ? 'sentence-playing' : '';
+  const sentencePlaying =
+    props.audioLoadSuccess && props.nowPlaying ? 'sentence-playing' : '';
   const sentence = (
     <p
       className={`p-sentence ${sentencePlaying} ${

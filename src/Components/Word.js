@@ -25,9 +25,13 @@ const Word = props => {
     <React.Fragment>
       <span
         className={
-          props.wordStart ? `span-keyword ${wordPlaying}` : `span-word`
+          props.audioLoadSuccess && props.wordStart
+            ? `span-keyword ${wordPlaying}`
+            : `span-word`
         }
-        onClick={props.wordStart ? handleClick : () => true}
+        onClick={
+          props.audioLoadSuccess && props.wordStart ? handleClick : () => true
+        }
         onBlur={e => props.handleWordChange(e, props.index)}
         onFocus={handleFocus}
         onKeyDown={e => props.handleKeyDown(e, props.index)}

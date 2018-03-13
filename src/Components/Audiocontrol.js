@@ -228,6 +228,7 @@ class Audiocontrol extends Component {
           handleLangChange={this.handleLangChange}
         />
         <Editor
+          audioLoadSuccess={this.props.audioLoadSuccess}
           offset={this.props.settings.offset}
           filename={this.props.audioFile.filename}
           currentTime={this.state.currentTime}

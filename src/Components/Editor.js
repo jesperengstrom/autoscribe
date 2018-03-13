@@ -155,7 +155,6 @@ class Editor extends Component {
   };
 
   handleWordChange = (e, i) => {
-    console.log(e.target);
     if (
       // double check id to make sure we have the right element
       // then only change state if word it's altered
@@ -164,12 +163,7 @@ class Editor extends Component {
       e.target.textContent !== this.state.transcript[i.sen].words[i.word].word
     ) {
       const newState = [...this.state.transcript];
-      if (!e.target.textContent) {
-        // empty -> remove
-        newState[i.sen].words.splice(i.word, 1);
-      } else {
-        newState[i.sen].words[i.word].word = e.target.textContent;
-      }
+      newState[i.sen].words[i.word].word = e.target.textContent;
       this.setState({ transcript: newState }, this.saveToLocalStorage);
     }
   };
@@ -311,6 +305,7 @@ class Editor extends Component {
               end={sen.senEnd}
               hasTimestamp={sen.hasTimestamp}
               isSplit={sen.isSplit ? sen.isSplit : false}
+              audioLoadSuccess={this.props.audioLoadSuccess}
               isRecording={this.props.isRecording}
               isPlaying={this.props.isPlaying}
               offset={this.props.offset}
@@ -324,6 +319,7 @@ class Editor extends Component {
                   handleSelectionPlay={this.props.handleSelectionPlay}
                   wordStart={word.wordStart}
                   senEnd={sen.senEnd}
+                  audioLoadSuccess={this.props.audioLoadSuccess}
                   isRecording={this.props.isRecording}
                   word={word.word}
                   last={wordIndex === sen.words.length - 1}
