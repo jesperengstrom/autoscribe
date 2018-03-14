@@ -94,6 +94,8 @@ Sentence.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.array])
     .isRequired,
   nowPlaying: PropTypes.bool.isRequired,
+  audioLoadSuccess: PropTypes.bool.isRequired,
+  isSplit: PropTypes.bool.isRequired,
 };
 
 Popup.propTypes = {
@@ -116,4 +118,6 @@ PopupContent.propTypes = {
   handleSelectionPlay: PropTypes.func.isRequired,
   handleDeleteSentence: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
+  audioLoadSuccess: PropTypes.bool.isRequired,
+  isSplit: PropTypes.bool.isRequired,
 };

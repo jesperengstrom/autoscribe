@@ -4,21 +4,34 @@ import './Word.css';
 
 const Word = props => {
   const wordPlaying = props.wordPlaying ? 'keyword-playing' : '';
+
   const handleClick = () => {
-    // no keywordplay while recording
     if (!props.isRecording)
+      // no keywordplay while recording
       props.handleSelectionPlay(
         props.wordStart + props.offset,
         props.senEnd + props.offset * 0.35,
       );
   };
-  // select word on focus
-  const handleFocus = e => {
+
+  const setSelection = element => {
     const range = document.createRange();
-    range.selectNodeContents(e.target);
+    range.selectNodeContents(element);
     const sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
+  };
+
+  // select word on focus
+  const handleFocus = e => {
+    setSelection(e.target);
+  };
+
+  const handleKeyUp = e => {
+    if (!e.target.innerText && e.target.nextElementSibling) {
+      // if we 'remove' a word, select the next one
+      setSelection(e.target.nextElementSibling);
+    }
   };
 
   return (
@@ -35,6 +48,7 @@ const Word = props => {
         onBlur={e => props.handleWordChange(e, props.index)}
         onFocus={handleFocus}
         onKeyDown={e => props.handleKeyDown(e, props.index)}
+        onKeyUp={handleKeyUp}
         data-id={props.wordId}
         data-first={props.index.word === 0}
         role="button"
@@ -67,4 +81,5 @@ Word.propTypes = {
   handleKeyDown: PropTypes.func.isRequired,
   last: PropTypes.bool.isRequired,
   offset: PropTypes.number.isRequired,
+  audioLoadSuccess: PropTypes.bool.isRequired,
 };

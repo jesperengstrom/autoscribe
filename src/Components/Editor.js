@@ -11,6 +11,7 @@ class Editor extends Component {
   state = {
     newTranscript: false,
     transcript: [],
+    filename: false,
   };
 
   componentDidMount() {
@@ -26,6 +27,14 @@ class Editor extends Component {
     if (!newProps.isRecording && this.state.transcript.length > 0) {
       // not recording + sentences present -> look for matches.
       this.sentencePlayingNow();
+    }
+    if (
+      this.props.audioLoadSuccess &&
+      Object.keys(newProps.latestTranscript).length > 0 &&
+      this.state.transcript.length === 0
+    ) {
+      // save filename when first transcription comes in
+      this.setState({ filename: this.props.filename });
     }
   }
 
@@ -44,7 +53,7 @@ class Editor extends Component {
       console.log('loaded saved transcript from localStorage!');
       const savedEditor = JSON.parse(localStorage.getItem('savedEditor'));
       this.setState(
-        { transcript: savedEditor.transcript },
+        { transcript: savedEditor.transcript, filename: savedEditor.filename },
         this.updateTranscriptSpan,
       );
     } else console.log('No found transcript in localStorage');
@@ -54,7 +63,10 @@ class Editor extends Component {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(
         'savedEditor',
-        JSON.stringify({ transcript: this.state.transcript }),
+        JSON.stringify({
+          transcript: this.state.transcript,
+          filename: this.state.filename,
+        }),
       );
     }
   };
@@ -156,8 +168,8 @@ class Editor extends Component {
 
   handleWordChange = (e, i) => {
     if (
-      // double check id to make sure we have the right element
-      // then only change state if word it's altered
+      // double check id so we have the right element
+      // then only change state if it's altered
       e.target.getAttribute('data-id') ===
         this.state.transcript[i.sen].words[i.word].wordId &&
       e.target.textContent !== this.state.transcript[i.sen].words[i.word].word
@@ -193,6 +205,7 @@ class Editor extends Component {
     return false;
   };
 
+  // ctrl + enter splits sentences
   splitSentences = (isKeyword, index) => {
     const sourceSen = { ...this.state.transcript[index.sen] };
     const newSen = { ...this.state.transcript[index.sen] };
@@ -289,6 +302,15 @@ class Editor extends Component {
           {this.props.speechRecError && (
             <EditorMessage type="speechRec" error={this.props.speechRecError} />
           )}
+          {this.props.audioLoadSuccess &&
+            this.state.transcript.length > 0 &&
+            this.state.filename &&
+            this.state.filename !== this.props.filename && (
+              <EditorMessage
+                type="audioMismatch"
+                message={this.state.filename}
+              />
+            )}
         </div>
         <div
           id="editor-container"
@@ -361,4 +383,5 @@ Editor.propTypes = {
   speechRecError: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
     .isRequired,
   handleSelectionPlay: PropTypes.func.isRequired,
+  audioLoadSuccess: PropTypes.bool.isRequired,
 };

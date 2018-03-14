@@ -1,0 +1,5 @@
+.editor-message {
+  max-width: 300px !important;
+  word-break: break-word !important;
+  min-width: 200px !important;
+}
