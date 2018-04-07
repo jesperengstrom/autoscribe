@@ -77,7 +77,7 @@ const TopMenu = props => {
       <div className="flex align-center justify-end">
         <p>
           <a
-            href="https://github.com/jesperengstrom/autoscribe/blob/master/Documentation.md"
+            href="https://github.com/jesperengstrom/autoscribe/blob/master/documentation/Documentation.md"
             target="_blank"
             rel="noopener noreferrer"
           >
