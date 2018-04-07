@@ -10,4 +10,4 @@ Lets u transcribe audio to text via Javascript speech recognition.
 
 ## Usage
 
-See [docs](https://github.com/jesperengstrom/autoscribe/blob/master/Documentation.md)
+See [docs](https://github.com/jesperengstrom/autoscribe/blob/master/src/documentation/Documentation.md)
