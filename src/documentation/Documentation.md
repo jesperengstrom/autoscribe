@@ -2,15 +2,15 @@
 
 ## About
 
-Autoscribe is a web app that lets you transcribe recorded audio files to text in the browser using [Javascript Speech Recognition API](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition).
+Autoscribe is a web app that lets you transcribe recorded audio files into text in the browser using [Javascript Speech Recognition API](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition).
 
-In order for it to work properly you need to read the Setup section carefully.
+In order for it to work properly you need to read the setup section carefully.
 
-This app was made by Jesper Engström as an educational thesis on the capacities of Javascript speech recognition. Essay can be read [here](./Jesper_Engstrom_Examensarbete.pdf) (in swedish).
+This app was made by Jesper Engström as an educational thesis on the capabilities of Javascript speech recognition. Essay can be read [here](./Jesper_Engstrom_Examensarbete.pdf) (in swedish).
 
 ## Requirements
 
-Chrome browser v.25 or newer
+Chrome browser v.25 or newer.
 
 ## Setup
 
@@ -20,7 +20,7 @@ Chrome browser v.25 or newer
 
   ![Activate Stereo mix](./fig1.png "fig. 1")
 
-2. Make sure the site uses the https-protocol (e.g here) or microphone access will be denied.
+2. Make sure the site uses the https-protocol (e.g [here](https://jesperengstrom.se/autoscribe/)) or microphone access will be denied.
 
 3. Load an audio file and hit record button. Allow page access to your microphone.
 
@@ -36,9 +36,9 @@ Chrome browser v.25 or newer
 
 * Timestamps can be inserted for individual transcribed "chunks".
 
-* Transcriptions are exportable in markdown (.md) format.
+* Transcript is stored in browser Local Storage to prevent it from being lost on page reload.
 
-* Transcription is stored in browser Local Storage to prevent it from being lost.
+* Transcript can be exported in markdown (.md) format.
 
 ## Usage
 
