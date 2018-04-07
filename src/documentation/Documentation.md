@@ -16,13 +16,15 @@ Chrome browser v.25 or newer
 
 **PC**:
 
-1. Allow for Autoscribe to use computer's microphone when prompted in the browser.
-
-2. Activate sound card's Stereo Mix, or similar internal audio stream, as recording device (fig. 1).
+1. Activate sound card's Stereo Mix, or similar internal audio stream, as your computer's recording device (fig. 1).
 
   ![Activate Stereo mix](./fig1.png "fig. 1")
 
-3. Choose this device as microphone in the adress bar when Autoscribe is open and microphone access has been allowed.
+2. Make sure the site uses the https-protocol (e.g here) or microphone access will be denied.
+
+3. Load an audio file and hit record button. Allow page access to your microphone.
+
+4. Choose Stereo mix (or other device with the internal audio stream) as microphone by clicking the camera icon in the adress bar.
 
   ![Choose Stereo mix in browser](./fig2.png "fig. 2")
 

@@ -125,7 +125,7 @@ class Audiocontrol extends Component {
 
   handleSelectionPlay = (start, end) => {
     if (start) {
-      console.log(`playing from: ${start}`);
+      // console.log(`playing from: ${start}`);
       this.handleSeek(start);
       this.handlePlaybackChange(true);
       this.setState({ stopOn: end }, () => {
